@@ -2,7 +2,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../config/firebase-config';
 
 export default function PerfilIndividualMulher() {
@@ -11,29 +11,50 @@ export default function PerfilIndividualMulher() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.push('/TelaLogin'); // Redireciona para a tela de login se o usuário não estiver autenticado
+                router.replace('/TelaLogin'); // Substitui para não voltar à TelaDeHomeUsuario
             }
         });
 
-        return () => unsubscribe();
+        const backAction = () => {
+            router.replace('/TelaDeHomeUsuario'); // Substitui a rota por TelaDeHomeUsuario
+            return true; // Evita o comportamento padrão de "back"
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => {
+            backHandler.remove();
+            unsubscribe();
+        };
     }, []);
 
     return (
         <View style={styles.container}>
-        <StatusBar hidden={true} />
+            <StatusBar hidden={true} />
+
+            {/* Botão Mudar */}
+            <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/PerfilIndividual')}>
+                <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
+                <Text style={styles.changeButtonText}>Trocar</Text>
+            </TouchableOpacity>
+
             <Text style={styles.title}>Mulher</Text>
+
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Colo De Útero')}>
-                <FontAwesome5 name="uterus" size={24} color="white" />
+                <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colo de Útero</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Mama')}>
-                <FontAwesome5 name="breast" size={24} color="white" />
+                <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Mama</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Colorretal')}>
-                <FontAwesome5 name="colon" size={24} color="white" />
+                <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colorretal</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Pulmão')}>
                 <FontAwesome5 name="lungs" size={24} color="white" />
                 <Text style={styles.buttonText}>Pulmão</Text>
@@ -42,6 +63,9 @@ export default function PerfilIndividualMulher() {
     );
 }
 
+// Estilos (permanece igual)
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -49,6 +73,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#1A237E',
         paddingHorizontal: 20,
+    },
+    backButton: {
+        position: 'absolute',
+        top: 40,
+        left: 20,
+    },
+    changeButton: {
+        position: 'absolute',
+        flexDirection: 'row',
+        top: 40,
+        width: 90,
+        right: 20,
+        padding: 10,
+        backgroundColor: '#3949AB',
+        borderRadius: 20,
+    },
+    changeButtonText: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        justifyContent: 'center',
+        textAlign: 'center',
+        alignItems: 'center',
+        marginTop: -2,
     },
     title: {
         fontSize: 24,
@@ -71,5 +118,12 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 18,
         marginLeft: 10,
+    },
+    iconMudar: {
+        marginRight: 8,
+        display: 'flex',
+        justifyContent: 'center',
+        textAlign: 'center',
+        alignItems: 'center',
     },
 });
