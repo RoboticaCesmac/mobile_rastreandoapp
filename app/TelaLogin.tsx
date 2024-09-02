@@ -1,8 +1,9 @@
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { auth } from '../config/firebase-config';
+import { auth, db } from '../config/firebase-config'; // Corrigido para importar `db`
 
 export default function TelaLogin() {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ export default function TelaLogin() {
   const [loading, setLoading] = useState(false); // Estado para o spinner
   const router = useRouter();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !senha) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
@@ -18,18 +19,34 @@ export default function TelaLogin() {
 
     setLoading(true); // Iniciar o spinner
 
-    signInWithEmailAndPassword(auth, email, senha)
-      .then((userCredential) => {
-        setLoading(false); // Parar o spinner
-        const user = userCredential.user;
-        Alert.alert('Login realizado com sucesso!');
-        router.push('/TelaDeHomeUsuario'); // Redirecionar para a tela de home
-      })
-      .catch((error) => {
-        setLoading(false); // Parar o spinner em caso de erro
-        console.error(error);
-        Alert.alert('Erro', 'Falha ao realizar login. Verifique suas credenciais e tente novamente.');
-      });
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user;
+
+      // Obtendo o documento do usuário
+      const userRef = doc(db, 'usuarios', user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const tipoUsuario = userData.tipoUsuario;
+
+        if (tipoUsuario === 'populacao') {
+          router.push('/TelaDeHomeUsuario'); // Redirecionar para a tela de home do usuário
+        } else if (tipoUsuario === 'saude') {
+          router.push('/TelaDeHomeProfissional' as any); // Redirecionar para a tela de home do profissional
+        } else {
+          Alert.alert('Erro', 'Tipo de usuário desconhecido.');
+        }
+      } else {
+        Alert.alert('Erro', 'Documento do usuário não encontrado.');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', 'Falha ao realizar login. Verifique suas credenciais e tente novamente.');
+    } finally {
+      setLoading(false); // Parar o spinner
+    }
   };
 
   return (
