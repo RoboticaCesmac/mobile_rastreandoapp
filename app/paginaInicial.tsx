@@ -19,10 +19,10 @@ export default function PaginaInicial() {
     <View style={styles.container}>
       <StatusBar hidden={true} />
       <Text style={styles.title}>Bem-vindo(a)!</Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/TelaLogin')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/Login/TelaLogin')}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/TelaCadastro')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/Cadastro/TelaCadastro')}>
         <Text style={styles.buttonText}>Cadastre-se</Text>
       </TouchableOpacity>
     </View>

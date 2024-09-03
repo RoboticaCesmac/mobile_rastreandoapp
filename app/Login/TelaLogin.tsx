@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, BackHandler, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { auth, db } from '../config/firebase-config'; // Corrigido para importar `db`
+import { auth, db } from '../../config/firebase-config'; // Corrigido para importar `db`
 
 export default function TelaLogin() {
   const [email, setEmail] = useState('');
@@ -43,9 +43,9 @@ export default function TelaLogin() {
         const tipoUsuario = userData.tipoUsuario;
 
         if (tipoUsuario === 'populacao') {
-          router.push('/TelaDeHomeUsuario'); // Redirecionar para a tela de home do usuário
+          router.push('/Home/TelaDeHomeUsuario'); // Redirecionar para a tela de home do usuário
         } else if (tipoUsuario === 'saude') {
-          router.push('/TelaDeHomeProfissional' as any); // Redirecionar para a tela de home do profissional
+          router.push('/Home/TelaDeHomeProfissional'); // Redirecionar para a tela de home do profissional
         } else {
           Alert.alert('Erro', 'Tipo de usuário desconhecido.');
         }

@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth } from '../config/firebase-config';
+import { auth } from '../../config/firebase-config';
 
 export default function PerfilIndividualMulher() {
     const router = useRouter();
@@ -11,12 +11,12 @@ export default function PerfilIndividualMulher() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.replace('/TelaLogin'); // Substitui para não voltar à TelaDeHomeUsuario
+                router.replace('/Login/TelaLogin'); // Substitui para não voltar à TelaDeHomeUsuario
             }
         });
 
         const backAction = () => {
-            router.replace('/TelaDeHomeUsuario'); // Substitui a rota por TelaDeHomeUsuario
+            router.replace('/Home/TelaDeHomeUsuario'); // Substitui a rota por TelaDeHomeUsuario
             return true; // Evita o comportamento padrão de "back"
         };
 
@@ -33,29 +33,29 @@ export default function PerfilIndividualMulher() {
             <StatusBar hidden={true} />
 
             {/* Botão Mudar */}
-            <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/PerfilIndividual')}>
+            <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
                 <Text style={styles.changeButtonText}>Trocar</Text>
             </TouchableOpacity>
 
             <Text style={styles.title}>Mulher</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Colo De Útero')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Colo De Útero')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colo de Útero</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Mama')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Mama')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Mama</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Colorretal')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Colorretal')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colorretal</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilInformacoesNeoplastia?neoplasia=Pulmão')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Pulmão')}>
                 <FontAwesome5 name="lungs" size={24} color="white" />
                 <Text style={styles.buttonText}>Pulmão</Text>
             </TouchableOpacity>

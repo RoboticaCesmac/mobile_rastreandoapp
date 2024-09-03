@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from 'react';
 import { Alert, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth, db } from '../config/firebase-config';
+import { auth, db } from '../../config/firebase-config';
 
 export default function PerfilIndividual() {
     const [escolha, setEscolha] = useState<string | null>(null);
@@ -33,9 +33,9 @@ export default function PerfilIndividual() {
 
                                 // Redireciona para a tela correspondente
                                 if (escolha === 'mulher') {
-                                    router.push('/PerfilIndividualMulher');
+                                    router.push('/PerfilIndividual/PerfilIndividualMulher');
                                 } else {
-                                    router.push('/PerfilIndividualHomem');
+                                    router.push('/PerfilIndividual/PerfilIndividualHomem');
                                 }
                             }
                         },

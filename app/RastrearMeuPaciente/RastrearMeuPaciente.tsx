@@ -13,14 +13,14 @@ export default function RastrearMeuPaciente() {
       
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => router.push('/RastrearMulher')}>
+        onPress={() => router.push('/RastrearMeuPaciente/RastrearMulher')}>
         <Ionicons name="female-outline" size={24} color="#FFFFFF" />
         <Text style={styles.buttonText}>Mulher</Text>
       </TouchableOpacity>
       
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => router.push('/RastrearHomem')}>
+        onPress={() => router.push('/RastrearMeuPaciente/RastrearHomem')}>
         <Ionicons name="male-outline" size={24} color="#FFFFFF" />
         <Text style={styles.buttonText}>Homem</Text>
       </TouchableOpacity>

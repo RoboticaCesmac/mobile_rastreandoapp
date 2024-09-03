@@ -4,7 +4,7 @@ import { signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useCallback } from 'react';
 import { Alert, BackHandler, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth, db } from '../config/firebase-config';
+import { auth, db } from '../../config/firebase-config';
 
 export default function TelaDeHomeUsuario() {
   const router = useRouter();
@@ -34,11 +34,11 @@ export default function TelaDeHomeUsuario() {
         const genero = userData.genero;
 
         if (genero === 'mulher') {
-          router.push('/PerfilIndividualMulher');
+          router.push('/PerfilIndividual/PerfilIndividualMulher');
         } else if (genero === 'homem') {
-          router.push('/PerfilIndividualHomem');
+          router.push('/PerfilIndividual/PerfilIndividualHomem');
         } else {
-          router.push('/PerfilIndividual');
+          router.push('/PerfilIndividual/PerfilIndividual');
         }
       }
     } else {
@@ -49,7 +49,7 @@ export default function TelaDeHomeUsuario() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        router.replace('/TelaLogin'); // Substitui a tela atual pela TelaLogin
+        router.replace('/Login/TelaLogin'); // Substitui a tela atual pela TelaLogin
       })
       .catch((error) => {
         console.error('Erro ao realizar logout:', error);
@@ -62,14 +62,14 @@ export default function TelaDeHomeUsuario() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <Image source={require('../assets/images/RASTREANDO.png')} style={styles.logo} />
+      <Image source={require('../../assets/images/RASTREANDO.png')} style={styles.logo} />
       <TouchableOpacity style={styles.button} onPress={handlePerfilIndividualPress}>
         <Text style={styles.buttonText}>Perfil Individual</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/ProximosExames')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/ProximosExames/ProximosExames')}>
         <Text style={styles.buttonText}>Seus próximos exames</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta/MarcarConsulta')}>
         <Text style={styles.buttonText}>Marque uma consulta</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

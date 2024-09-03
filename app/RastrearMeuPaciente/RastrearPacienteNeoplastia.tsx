@@ -2,9 +2,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth } from '../config/firebase-config';
+import { auth } from '../../config/firebase-config';
 
-export default function PerfilInformacoesNeoplastia() {
+export default function RastrearPacienteNeoplastia() {
     const router = useRouter();
     const { neoplasia } = useLocalSearchParams(); // Pega o nome da neoplasia da URL
     const [title, setTitle] = useState<string>('');
@@ -12,7 +12,7 @@ export default function PerfilInformacoesNeoplastia() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.push('/TelaLogin'); // Redireciona para a tela de login se o usuário não estiver autenticado
+                router.push('/Login/TelaLogin'); // Redireciona para a tela de login se o usuário não estiver autenticado
             }
         });
 
@@ -29,13 +29,13 @@ export default function PerfilInformacoesNeoplastia() {
         <StatusBar hidden={true} />
             <Text style={styles.title}>{title}</Text>
             <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Calcule seu Risco</Text>
+                <Text style={styles.buttonText}>Sinais de Alarme e Fatores de Risco</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Seus exames de rastreio</Text>
+                <Text style={styles.buttonText}>Indicações de Rastreio</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Sinais e sintomas</Text>
+                <Text style={styles.buttonText}>Conduta e Manejo Após Resultados</Text>
             </TouchableOpacity>
         </View>
     );

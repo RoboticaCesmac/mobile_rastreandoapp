@@ -3,7 +3,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { signOut } from 'firebase/auth';
 import React, { useCallback } from 'react';
 import { Alert, BackHandler, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth } from '../config/firebase-config';
+import { auth } from '../../config/firebase-config';
 
 export default function TelaDeHomeProfissional() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function TelaDeHomeProfissional() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        router.replace('/TelaLogin'); // Substitui a tela atual pela TelaLogin
+        router.replace('/Login/TelaLogin'); // Substitui a tela atual pela TelaLogin
       })
       .catch((error) => {
         console.error('Erro ao realizar logout:', error);
@@ -36,11 +36,11 @@ export default function TelaDeHomeProfissional() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <Image source={require('../assets/images/RASTREANDO.png')} style={styles.logo} />
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente')}>
+      <Image source={require('../../assets/images/RASTREANDO.png')} style={styles.logo} />
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
         <Text style={styles.buttonText}>Rastrear Meu Paciente</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/TelaDeHomeProfissionalPessoal')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/Home/TelaDeHomeProfissionalPessoal')}>
         <Text style={styles.buttonText}>Meu Perfil</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

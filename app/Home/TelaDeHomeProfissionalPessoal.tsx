@@ -3,7 +3,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useCallback } from 'react';
 import { Alert, BackHandler, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth, db } from '../config/firebase-config';
+import { auth, db } from '../../config/firebase-config';
 
 export default function TelaDeHomeProfissionalPessoal() {
   const router = useRouter();
@@ -33,11 +33,11 @@ export default function TelaDeHomeProfissionalPessoal() {
         const genero = userData.genero;
 
         if (genero === 'mulher') {
-          router.push('/PerfilIndividualMulher');
+          router.push('/PerfilIndividual/PerfilIndividualMulher');
         } else if (genero === 'homem') {
-          router.push('/PerfilIndividualHomem');
+          router.push('/PerfilIndividual/PerfilIndividualHomem');
         } else {
-          router.push('/PerfilIndividual');
+          router.push('/PerfilIndividual/PerfilIndividual');
         }
       }
     } else {
@@ -46,7 +46,7 @@ export default function TelaDeHomeProfissionalPessoal() {
   };
 
   const handleBack = () => {
-    router.push('/TelaDeHomeProfissional');
+    router.push('/Home/TelaDeHomeProfissional');
 
   };
   
@@ -55,14 +55,14 @@ export default function TelaDeHomeProfissionalPessoal() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <Image source={require('../assets/images/RASTREANDO.png')} style={styles.logo} />
+      <Image source={require('../../assets/images/RASTREANDO.png')} style={styles.logo} />
       <TouchableOpacity style={styles.button} onPress={handlePerfilIndividualPress}>
         <Text style={styles.buttonText}>Perfil Individual</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/ProximosExames')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/ProximosExames/ProximosExames')}>
         <Text style={styles.buttonText}>Seus próximos exames</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta/MarcarConsulta')}>
         <Text style={styles.buttonText}>Marque uma consulta</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
