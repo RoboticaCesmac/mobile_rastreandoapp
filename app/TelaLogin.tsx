@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, BackHandler, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../config/firebase-config'; // Corrigido para importar `db`
 
 export default function TelaLogin() {
@@ -10,6 +10,17 @@ export default function TelaLogin() {
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false); // Estado para o spinner
   const router = useRouter();
+
+  useEffect(() => {
+    const backAction = () => {
+      router.replace('/paginaInicial'); // Redirecionar para a tela de página inicial
+      return true; // Prevenir o comportamento padrão de sair do app
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove(); // Limpar o listener ao desmontar o componente
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !senha) {

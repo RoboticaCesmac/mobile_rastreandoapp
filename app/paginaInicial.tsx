@@ -1,12 +1,20 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+import React, { useEffect } from 'react';
+import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function PaginaInicial() {
   const router = useRouter();
 
-  
+  useEffect(() => {
+    const backAction = () => {
+      return true; // Bloqueia o botão "back"
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove(); // Limpar o listener ao desmontar o componente
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />

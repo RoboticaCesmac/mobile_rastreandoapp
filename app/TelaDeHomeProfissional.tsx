@@ -33,13 +33,11 @@ export default function TelaDeHomeProfissional() {
       });
   };
   
-  
-
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
       <Image source={require('../assets/images/RASTREANDO.png')} style={styles.logo} />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente')}>
         <Text style={styles.buttonText}>Rastrear Meu Paciente</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => router.push('/TelaDeHomeProfissionalPessoal')}>
