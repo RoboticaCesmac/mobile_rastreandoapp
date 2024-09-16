@@ -33,7 +33,7 @@ export default function RastrearMulher() {
 
             <Text style={styles.title}>Mulher</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplastia?neoplasia=Colo De Útero')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplastia?neoplasia=Colo de Útero')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colo de Útero</Text>
             </TouchableOpacity>

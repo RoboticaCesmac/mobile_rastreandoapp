@@ -1,13 +1,22 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
+import { useFonts } from 'expo-font';
+import { Href, useLocalSearchParams, useRouter } from 'expo-router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../config/firebase-config';
+
+const firestore = getFirestore();
+const authInstance = getAuth();
 
 export default function PerfilInformacoesNeoplastia() {
     const router = useRouter();
     const { neoplasia } = useLocalSearchParams(); // Pega o nome da neoplasia da URL
     const [title, setTitle] = useState<string>('');
+    const [fontsLoaded] = useFonts({
+        'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
+        'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
+    });
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -18,17 +27,79 @@ export default function PerfilInformacoesNeoplastia() {
 
         // Define o título da tela baseado no parâmetro passado
         if (neoplasia) {
+            console.log("Neoplasia capturada da URL:", neoplasia); // Adiciona o console.log para visualizar o valor capturado
             setTitle(neoplasia as string);
         }
 
         return () => unsubscribe();
     }, [neoplasia]);
 
+    const redirecionarParaCalculoDeRisco = async () => {
+        const user = authInstance.currentUser;
+
+        if (user) {
+            const userDocRef = doc(firestore, 'usuarios', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const genero = userData.genero;
+
+                let caminho = '';
+
+                if (genero === 'homem') {
+                    switch (neoplasia) {
+                        case 'Próstata':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRHomem/CalculeSeuRiscoProstata';
+                            break;
+                        case 'Colorretal':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRHomem/CalculeSeuRiscoColorretal';
+                            break;
+                        case 'Pulmão':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRHomem/CalculeSeuRiscoPulmao';
+                            break;
+                        default:
+                            console.error('Neoplasia desconhecida para homens');
+                    }
+                } else if (genero === 'mulher') {
+                    switch (neoplasia) {
+                        case 'Colo de Útero':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRMulher/CalculeSeuRiscoColoDeUtero';
+                            break;
+                        case 'Mama':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRMulher/CalculeSeuRiscoMama';
+                            break;
+                        case 'Colorretal':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRMulher/CalculeSeuRiscoColorretal';
+                            break;
+                        case 'Pulmão':
+                            caminho = '/PerfilIndividual/CalculeSeuRisco/CSRMulher/CalculeSeuRiscoPulmao';
+                            break;
+                        default:
+                            console.error('Neoplasia desconhecida para mulheres');
+                    }
+                } else {
+                    console.error('Gênero desconhecido');
+                }
+
+                if (caminho) {
+                    router.push(caminho as Href<string>);
+                }
+            } else {
+                console.error('Documento do usuário não encontrado');
+            }
+        } else {
+            console.error('Usuário não está logado');
+        }
+    };
+
     return (
         <View style={styles.container}>
-        <StatusBar hidden={true} />
+            <StatusBar hidden={true} />
             <Text style={styles.title}>{title}</Text>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={redirecionarParaCalculoDeRisco}>
                 <Text style={styles.buttonText}>Calcule seu Risco</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
@@ -46,14 +117,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1A237E',
+        backgroundColor: '#232d97',
         paddingHorizontal: 20,
+        fontFamily: 'Quicksand-Bold',
     },
     title: {
         fontSize: 24,
         color: '#FFFFFF',
         marginBottom: 20,
-        fontWeight: 'bold',
+        fontFamily: 'Quicksand-Bold',
     },
     button: {
         backgroundColor: '#3949AB',
@@ -67,6 +139,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#FFFFFF',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: 'Quicksand-Bold',
     },
 });

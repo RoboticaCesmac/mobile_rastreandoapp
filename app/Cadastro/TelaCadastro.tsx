@@ -1,3 +1,4 @@
+import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -25,7 +26,11 @@ export default function TelaCadastro() {
   const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
-  const [loading, setLoading] = useState(false); // Estado para o spinner
+  const [loading, setLoading] = useState(false);
+  const [fontsLoaded] = useFonts({
+    'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
+    'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
+  });
 
   const router = useRouter();
 
@@ -72,6 +77,10 @@ export default function TelaCadastro() {
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <StatusBar hidden={true} />
+        <TouchableOpacity style={styles.titleDiv}>
+            <Text style={styles.title}>Cadastre-se</Text>
+          </TouchableOpacity>
+          
         <TextInput
           style={styles.input}
           placeholder="Nome"
@@ -138,7 +147,7 @@ export default function TelaCadastro() {
                 tipoUsuario === 'saude' ? styles.tipoButtonTextSelected : null,
               ]}
             >
-              Profissional de Saúde
+              Profis. da Saúde
             </Text>
           </TouchableOpacity>
         </View>
@@ -160,7 +169,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#1A237E',
+    backgroundColor: '#232d97',
   },
   input: {
     backgroundColor: '#FFFFFF',
@@ -168,11 +177,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     fontSize: 16,
+    fontFamily: 'Quicksand-Bold',
+  },
+  title: {
+    fontSize: 24,
+    color: '#FFFFFF',
+    fontFamily: 'Quicksand-Bold',
+    marginBottom: 15,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 15,
+    alignItems: 'center',
+    fontFamily: 'Quicksand-Bold',
+    alignContent: 'center',
   },
   tipoButton: {
     flex: 1,
@@ -181,26 +200,39 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     marginHorizontal: 5,
+    justifyContent: 'center',
+    display: 'flex',
   },
   tipoButtonSelected: {
     backgroundColor: '#FF5722', // Cor alterada para indicar o botão selecionado
   },
   tipoButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 15,
+    fontFamily: 'Quicksand-Medium',
+    alignItems: 'center',
+
   },
   tipoButtonTextSelected: {
-    fontWeight: 'bold', // Texto em negrito para o botão selecionado
+    fontFamily: 'Quicksand-Bold',
   },
   button: {
     backgroundColor: '#3949AB',
     paddingVertical: 15,
     borderRadius: 25,
     alignItems: 'center',
+    fontFamily: 'Quicksand-Bold',
+  },
+  titleDiv: {
+    paddingVertical: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    fontSize: 24,
+    fontFamily: 'Quicksand-Bold',
   },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

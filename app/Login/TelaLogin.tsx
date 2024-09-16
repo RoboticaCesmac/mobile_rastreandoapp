@@ -1,3 +1,4 @@
+import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -10,6 +11,10 @@ export default function TelaLogin() {
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false); // Estado para o spinner
   const router = useRouter();
+  const [fontsLoaded] = useFonts({
+    'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
+    'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
+  });
 
   useEffect(() => {
     const backAction = () => {
@@ -83,7 +88,7 @@ export default function TelaLogin() {
       />
 
       {loading ? (
-        <ActivityIndicator size="large" color="#FF5722" /> // Spinner de carregamento
+        <ActivityIndicator size="large" color="#ff5721" /> // Spinner de carregamento
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Entrar</Text>
@@ -98,12 +103,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1A237E', // Azul escuro
+    backgroundColor: '#232d97', // Azul escuro
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: '#FFFFFF',
+    fontFamily: 'Quicksand-Bold',
     marginBottom: 30,
   },
   input: {
@@ -114,6 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     fontSize: 18,
     marginVertical: 10,
+    fontFamily: 'Quicksand-Bold',
   },
   button: {
     backgroundColor: '#3949AB',
@@ -127,6 +133,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Quicksand-Bold',
   },
 });
