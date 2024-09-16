@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../config/firebase-config';
 
-export default function RastrearPacienteNeoplastia() {
+export default function RastrearPacienteNeoplasia() {
     const router = useRouter();
     const { neoplasia } = useLocalSearchParams(); // Pega o nome da neoplasia da URL
     const [title, setTitle] = useState<string>('');

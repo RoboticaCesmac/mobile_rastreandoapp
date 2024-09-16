@@ -45,15 +45,15 @@ export default function PerfilIndividualHomem() {
 
             <Text style={styles.title}>Homem</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Próstata')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Próstata')}>
                 <Text style={styles.buttonText}>Próstata</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Colorretal')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colorretal')}>
                 <Text style={styles.buttonText}>Colorretal</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Pulmão')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Pulmão')}>
                 <Text style={styles.buttonText}>Pulmão</Text>
             </TouchableOpacity>
         </View>

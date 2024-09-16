@@ -45,19 +45,19 @@ export default function PerfilIndividualMulher() {
 
             <Text style={styles.title}>Mulher</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Colo de Útero')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colo de Útero')}>
                 <Text style={styles.buttonText}>Colo de Útero</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Mama')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Mama')}>
                 <Text style={styles.buttonText}>Mama</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Colorretal')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colorretal')}>
                 <Text style={styles.buttonText}>Colorretal</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplastia?neoplasia=Pulmão')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Pulmão')}>
                 <Text style={styles.buttonText}>Pulmão</Text>
             </TouchableOpacity>
         </View>

@@ -9,7 +9,7 @@ import { auth } from '../../config/firebase-config';
 const firestore = getFirestore();
 const authInstance = getAuth();
 
-export default function PerfilInformacoesNeoplastia() {
+export default function PerfilInformacoesNeoplasia() {
     const router = useRouter();
     const { neoplasia } = useLocalSearchParams(); // Pega o nome da neoplasia da URL
     const [title, setTitle] = useState<string>('');

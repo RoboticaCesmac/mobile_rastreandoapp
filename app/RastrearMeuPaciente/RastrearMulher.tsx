@@ -33,22 +33,22 @@ export default function RastrearMulher() {
 
             <Text style={styles.title}>Mulher</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplastia?neoplasia=Colo de Útero')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colo de Útero')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colo de Útero</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplastia?neoplasia=Mama')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Mama')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Mama</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplastia?neoplasia=Colorretal')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colorretal')}>
                 <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colorretal</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplastia?neoplasia=Pulmão')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Pulmão')}>
                 <FontAwesome5 name="lungs" size={24} color="white" />
                 <Text style={styles.buttonText}>Pulmão</Text>
             </TouchableOpacity>
