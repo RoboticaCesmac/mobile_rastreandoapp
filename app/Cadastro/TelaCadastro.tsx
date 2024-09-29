@@ -1,3 +1,4 @@
+import * as EmailValidator from 'email-validator';
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -16,7 +17,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { TextInputMask } from 'react-native-masked-text'; // Máscara para CPF e Data
+import { TextInputMask } from 'react-native-masked-text';
 import { auth, db } from '../../config/firebase-config';
 
 export default function TelaCadastro() {
@@ -37,6 +38,11 @@ export default function TelaCadastro() {
   const handleCadastro = () => {
     if (!nome || !email || !cpf || !dataNascimento || !senha || !tipoUsuario) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+      return;
+    }
+
+    if (!EmailValidator.validate(email)) {
+      Alert.alert('Erro', 'Por favor, insira um endereço de email válido.');
       return;
     }
 

@@ -93,6 +93,124 @@ export default function PerfilInformacoesNeoplasia() {
         }
     };
 
+    const redirecionarParaExamesDeRastreio = async () => {
+        const user = authInstance.currentUser;
+
+        if (user) {
+            const userDocRef = doc(firestore, 'usuarios', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const genero = userData.genero;
+
+                let caminho = '';
+
+                if (genero === 'homem') {
+                    switch (neoplasia) {
+                        case 'Próstata':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRHomem/SeusExamesDeRastreioProstataMasculino';
+                            break;
+                        case 'Colorretal':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRHomem/SeusExamesDeRastreioColorretalMasculino';
+                            break;
+                        case 'Pulmão':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRHomem/SeusExamesDeRastreioPulmaoMasculino';
+                            break;
+                        default:
+                            console.error('Neoplasia desconhecida para homens');
+                    }
+                } else if (genero === 'mulher') {
+                    switch (neoplasia) {
+                        case 'Colo de Útero':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRMulher/SeusExamesDeRastreioColoDeUteroFeminino';
+                            break;
+                        case 'Mama':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRMulher/SeusExamesDeRastreioMamaFeminino';
+                            break;
+                        case 'Colorretal':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRMulher/SeusExamesDeRastreioColorretalFeminino';
+                            break;
+                        case 'Pulmão':
+                            caminho = '/PerfilIndividual/SeusExamesDeRastreio/SEDRMulher/SeusExamesDeRastreioPulmaoFeminino';
+                            break;
+                        default:
+                            console.error('Neoplasia desconhecida para mulheres');
+                    }
+                } else {
+                    console.error('Gênero desconhecido');
+                }
+
+                if (caminho) {
+                    router.push(caminho as Href<string>);
+                }
+            } else {
+                console.error('Documento do usuário não encontrado');
+            }
+        } else {
+            console.error('Usuário não está logado');
+        }
+    };
+
+    const redirecionarParaSinaisESintomas = async () => {
+        const user = authInstance.currentUser;
+
+        if (user) {
+            const userDocRef = doc(firestore, 'usuarios', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const genero = userData.genero;
+
+                let caminho = '';
+
+                if (genero === 'homem') {
+                    switch (neoplasia) {
+                        case 'Próstata':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasProstataMasculino';
+                            break;
+                        case 'Colorretal':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasColorretalMasculino';
+                            break;
+                        case 'Pulmão':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasPulmaoMasculino';
+                            break;
+                        default:
+                            console.error('Neoplasia desconhecida para homens');
+                    }
+                } else if (genero === 'mulher') {
+                    switch (neoplasia) {
+                        case 'Colo de Útero':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasColoDeUteroFeminino';
+                            break;
+                        case 'Mama':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasMamaFeminino';
+                            break;
+                        case 'Colorretal':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasColorretalFeminino';
+                            break;
+                        case 'Pulmão':
+                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasPulmaoFeminino';
+                            break;
+                        default:
+                            console.error('Neoplasia desconhecida para mulheres');
+                    }
+                } else {
+                    console.error('Gênero desconhecido');
+                }
+
+                if (caminho) {
+                    router.push(caminho as Href<string>);
+                }
+            } else {
+                console.error('Documento do usuário não encontrado');
+            }
+        } else {
+            console.error('Usuário não está logado');
+        }
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
@@ -102,10 +220,14 @@ export default function PerfilInformacoesNeoplasia() {
                 onPress={redirecionarParaCalculoDeRisco}>
                 <Text style={styles.buttonText}>Calcule seu Risco</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={redirecionarParaExamesDeRastreio}>
                 <Text style={styles.buttonText}>Seus exames de rastreio</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={redirecionarParaSinaisESintomas}>
                 <Text style={styles.buttonText}>Sinais e sintomas</Text>
             </TouchableOpacity>
         </View>
