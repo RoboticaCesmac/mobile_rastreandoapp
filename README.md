@@ -1,2 +1,2 @@
 # rastreando-app
-Projeto TCC Rastreando Web Version (Denise Padilha)
+Projeto TCC Rastreando Web Version (Denise Padilha, Alessandra Pontes)
