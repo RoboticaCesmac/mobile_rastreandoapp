@@ -37,12 +37,11 @@ const CalculeSeuRiscoProstata = () => {
   const handleSelecao = (index: number) => {
     const novasSelecoes = [...selecoes];
     if (index === fatoresDeRisco.length - 1) {
-      // Se "Nenhuma das anteriores" for selecionado, limpa todas as outras seleções e marca "Nenhuma das anteriores"
       novasSelecoes.fill(false);
       novasSelecoes[index] = true;
     } else {
       novasSelecoes[index] = !novasSelecoes[index];
-      novasSelecoes[fatoresDeRisco.length - 1] = false; // Desmarca "Nenhuma das anteriores"
+      novasSelecoes[fatoresDeRisco.length - 1] = false;
     }
     setSelecoes(novasSelecoes);
   };
@@ -69,7 +68,6 @@ const CalculeSeuRiscoProstata = () => {
     setResultado(resultadoTexto);
     setModalVisible(true);
 
-    // Armazenar resultado no Firebase
     const user = auth.currentUser;
     if (user) {
       const userDocRef = doc(firestore, 'usuarios', user.uid);
@@ -83,7 +81,6 @@ const CalculeSeuRiscoProstata = () => {
           data: new Date().toISOString()
         };
 
-        // Remove qualquer resultado existente para o tipo de neoplasia
         const resultadosAtualizados = resultados.filter((res: any) => res.tipo !== 'Próstata');
         resultadosAtualizados.push(novoResultado);
 

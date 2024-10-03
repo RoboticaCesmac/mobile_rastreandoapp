@@ -8,11 +8,10 @@ import { auth } from '../../config/firebase-config';
 export default function TelaDeHomeProfissional() {
   const router = useRouter();
 
-  // Bloqueando o botão "back" do dispositivo
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        return true; // Impede o comportamento padrão do botão "back"
+        return true;
       };
 
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
@@ -25,7 +24,7 @@ export default function TelaDeHomeProfissional() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        router.replace('/Login/TelaLogin'); // Substitui a tela atual pela TelaLogin
+        router.replace('/Login/TelaLogin');
       })
       .catch((error) => {
         console.error('Erro ao realizar logout:', error);

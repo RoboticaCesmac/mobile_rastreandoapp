@@ -6,17 +6,16 @@ import { auth } from '../../config/firebase-config';
 
 export default function RastrearPacienteNeoplasia() {
     const router = useRouter();
-    const { neoplasia } = useLocalSearchParams(); // Pega o nome da neoplasia da URL
+    const { neoplasia } = useLocalSearchParams();
     const [title, setTitle] = useState<string>('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.push('/Login/TelaLogin'); // Redireciona para a tela de login se o usuário não estiver autenticado
+                router.push('/Login/TelaLogin');
             }
         });
 
-        // Define o título da tela baseado no parâmetro passado
         if (neoplasia) {
             setTitle(neoplasia as string);
         }

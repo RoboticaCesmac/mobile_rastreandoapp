@@ -15,12 +15,12 @@ export default function PaginaInicial() {
 
   useEffect(() => {
     const backAction = () => {
-      return true; // Bloqueia o botão "back"
+      return true;
     };
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
-    return () => backHandler.remove(); // Limpar o listener ao desmontar o componente
+    return () => backHandler.remove();
   }, []);
 
   return (
@@ -32,7 +32,7 @@ export default function PaginaInicial() {
         source={require('../assets/lottie/logo.json')}
         autoPlay
         loop={true}
-        speed={0.7} // Ajuste a velocidade conforme necessário
+        speed={0.7}
         style={styles.lottie}
       />
       <Text style={styles.title}>Bem-vindo(a)!</Text>
@@ -51,16 +51,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#232d97', // Azul escuro
+    backgroundColor: '#232d97',
   },
   title: {
     fontSize: 24,
-    color: '#FFFFFF', // Branco
+    color: '#FFFFFF',
     marginBottom: 30,
     fontFamily: 'Quicksand-Medium',
   },
   button: {
-    backgroundColor: '#3949AB', // Tom de azul mais claro
+    backgroundColor: '#3949AB',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF', // Branco
+    color: '#FFFFFF',
     fontSize: 18,
     fontFamily: 'Quicksand-Medium',
   },
   lottie: {
-    width: 200, // Ajuste o tamanho conforme necessário
-    height: 200, // Ajuste o tamanho conforme necessário
+    width: 200,
+    height: 200,
   },
   titleRastreando: {
     fontSize: 32,

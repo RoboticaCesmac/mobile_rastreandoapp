@@ -17,7 +17,6 @@ export default function PerfilIndividual() {
 
     const confirmarEscolha = async () => {
         if (escolha) {
-            // Pergunta ao usuário se ele deseja confirmar a escolha
             Alert.alert(
                 'Confirmação',
                 `Você tem certeza que deseja escolher ${escolha === 'mulher' ? 'Mulher' : 'Homem'}?`,
@@ -31,13 +30,11 @@ export default function PerfilIndividual() {
                         onPress: async () => {
                             const user = auth.currentUser;
                             if (user) {
-                                // Atualiza o perfil do usuário no Firebase com a escolha
                                 const userRef = doc(db, "usuarios", user.uid);
                                 await updateDoc(userRef, {
                                     genero: escolha,
                                 });
 
-                                // Redireciona para a tela correspondente
                                 if (escolha === 'mulher') {
                                     router.push('/PerfilIndividual/PerfilIndividualMulher');
                                 } else {
@@ -68,7 +65,7 @@ export default function PerfilIndividual() {
                     source={require('../../assets/lottie/escolha3.json')}
                     autoPlay
                     loop={true}
-                    speed={1.2} // Ajuste a velocidade conforme necessário
+                    speed={1.2}
                     style={styles.lottie}
                 />
             
@@ -133,8 +130,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Quicksand-Bold',
     },
     lottie: {
-        width: 300, // Ajuste o tamanho conforme necessário
-        height: 300, // Ajuste o tamanho conforme necessário
+        width: 300,
+        height: 300,
         marginBottom:-30,
         marginTop:-30,
       },

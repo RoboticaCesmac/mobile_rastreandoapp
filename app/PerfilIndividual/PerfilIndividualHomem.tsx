@@ -16,13 +16,13 @@ export default function PerfilIndividualHomem() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.replace('/Login/TelaLogin'); // Redireciona para TelaLogin se não estiver autenticado
+                router.replace('/Login/TelaLogin');
             }
         });
 
         const backAction = () => {
-            router.replace('/Home/TelaDeHomeUsuario'); // Redireciona para TelaDeHomeUsuario
-            return true; // Evita o comportamento padrão de "back"
+            router.replace('/Home/TelaDeHomeUsuario');
+            return true;
         };
 
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
@@ -37,7 +37,6 @@ export default function PerfilIndividualHomem() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
-            {/* Botão Mudar */}
             <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/PerfilIndividual/PerfilIndividual')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
                 <Text style={styles.changeButtonText}>Trocar</Text>

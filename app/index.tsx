@@ -29,7 +29,7 @@ export default function SplashScreenApp() {
   }, [router]);
 
   if (!fontsLoaded) {
-    return null; // Retorna null até que as fontes sejam carregadas
+    return null;
   }
 
   return (
@@ -39,7 +39,7 @@ export default function SplashScreenApp() {
         source={require('../assets/lottie/lupa.json')}
         autoPlay
         loop={true}
-        speed={0.5} // Ajuste a velocidade conforme necessário
+        speed={0.5}
         style={styles.lottie}
       />
       <Text style={styles.title}>RASTREANDO</Text>
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#232d97',
   },
   lottie: {
-    width: 120, // Ajuste o tamanho conforme necessário
-    height: 120, // Ajuste o tamanho conforme necessário
+    width: 120,
+    height: 120,
     marginBottom: 20,
   },
   title: {

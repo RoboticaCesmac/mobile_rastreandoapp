@@ -17,13 +17,13 @@ export default function PerfilIndividualMulher() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.replace('/Login/TelaLogin'); // Substitui para não voltar à TelaDeHomeUsuario
+                router.replace('/Login/TelaLogin');
             }
         });
 
         const backAction = () => {
-            router.replace('/Home/TelaDeHomeUsuario'); // Substitui a rota por TelaDeHomeUsuario
-            return true; // Evita o comportamento padrão de "back"
+            router.replace('/Home/TelaDeHomeUsuario');
+            return true;
         };
 
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
@@ -38,7 +38,6 @@ export default function PerfilIndividualMulher() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
-            {/* Botão Mudar */}
             <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/PerfilIndividual/PerfilIndividual')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
                 <Text style={styles.changeButtonText}>Trocar</Text>
@@ -68,7 +67,6 @@ export default function PerfilIndividualMulher() {
                 </TouchableOpacity>
             </View>
 
-            {/* Lottie Animation */}
             <LottieView
                 source={require('../../assets/lottie/mulher2.json')}
                 autoPlay
@@ -151,8 +149,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     lottie: {
-        width: 485, // Ajuste o tamanho conforme necessário
-        height: 300, // Ajuste o tamanho conforme necessário
+        width: 485,
+        height: 300,
         marginTop: 75,
         marginLeft: 30,
     },

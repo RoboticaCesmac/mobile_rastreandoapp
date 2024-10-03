@@ -8,11 +8,10 @@ import { auth, db } from '../../config/firebase-config';
 export default function TelaDeHomeProfissionalPessoal() {
   const router = useRouter();
 
-  // Bloqueando o botão "back" do dispositivo
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        return true; // Impede o comportamento padrão do botão "back"
+        return true;
       };
 
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
@@ -50,8 +49,6 @@ export default function TelaDeHomeProfissionalPessoal() {
 
   };
   
-  
-
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />

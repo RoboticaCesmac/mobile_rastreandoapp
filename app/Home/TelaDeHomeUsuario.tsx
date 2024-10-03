@@ -16,11 +16,10 @@ export default function TelaDeHomeUsuario() {
   });
   const [userName, setUserName] = useState('');
 
-  // Bloqueando o botão "back" do dispositivo
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        return true; // Impede o comportamento padrão do botão "back"
+        return true;
       };
 
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
@@ -73,7 +72,7 @@ export default function TelaDeHomeUsuario() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        router.replace('/Login/TelaLogin'); // Substitui a tela atual pela TelaLogin
+        router.replace('/Login/TelaLogin');
       })
       .catch((error) => {
         console.error('Erro ao realizar logout:', error);
@@ -88,7 +87,7 @@ export default function TelaDeHomeUsuario() {
         source={require('../../assets/lottie/logo.json')}
         autoPlay
         loop={true}
-        speed={0.7} // Ajuste a velocidade conforme necessário
+        speed={0.7}
         style={styles.lottie}
       />
       {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
@@ -122,8 +121,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   lottie: {
-    width: 200, // Ajuste o tamanho conforme necessário
-    height: 200, // Ajuste o tamanho conforme necessário
+    width: 200,
+    height: 200,
   },
   welcomeText: {
     color: '#FFFFFF',

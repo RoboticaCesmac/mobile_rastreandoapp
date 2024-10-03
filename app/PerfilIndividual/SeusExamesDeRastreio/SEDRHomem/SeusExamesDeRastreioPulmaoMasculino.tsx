@@ -29,8 +29,8 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
     }, [user]);
 
     const handleConfirm = (date: Date) => {
-        setSelectedDate(date); // Armazena a data selecionada
-        setRiskModalVisibility(true); // Exibe o modal para escolher o tipo de risco
+        setSelectedDate(date);
+        setRiskModalVisibility(true);
         hideDatePicker();
     };
 
@@ -42,7 +42,6 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
         let finalDate = selectedDate;
 
         if (choice === 'riscoElevado' && selectedDate) {
-            // Calcula o próximo exame para 10 anos no futuro
             finalDate = new Date(selectedDate);
             finalDate.setFullYear(finalDate.getFullYear() + 10);
         }
@@ -61,14 +60,14 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
             }
         }
 
-        setResultado(''); // Limpa o campo de resultado após adicionar o exame
+        setResultado('');
         hideRiskModal();
     };
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Adiciona 1 ao mês, pois janeiro é 0
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
@@ -78,15 +77,12 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
             <View style={styles.container}>
                 <StatusBar hidden={true} />
 
-                {/* Título Principal */}
                 <Text style={styles.title}>Seus Exames de Rastreio - Pulmão</Text>
 
-                {/* Próximo Exame */}
                 <Text style={styles.subtitle}>
                     Próximo: {proximoExame ? formatDate(proximoExame) : 'Nenhuma data marcada'}
                 </Text>
 
-                {/* Lista de Exames Anteriores com Colunas para Exame e Resultado */}
                 {examesAnteriores.map((exame, index) => (
                     <View key={index} style={styles.row}>
                         <View style={styles.column}>
@@ -100,12 +96,10 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
                     </View>
                 ))}
 
-                {/* Botão para Adicionar Novo Exame */}
                 <TouchableOpacity style={styles.button} onPress={showDatePicker}>
                     <Text style={styles.buttonText}>Adicionar Novo Exame</Text>
                 </TouchableOpacity>
 
-                {/* Modal para Escolha de Risco */}
                 <Modal visible={isRiskModalVisible} transparent={true} animationType="slide">
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Escolha o tipo de risco:</Text>
@@ -124,7 +118,6 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
                     </View>
                 </Modal>
 
-                {/* Seletor de Data */}
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
@@ -137,19 +130,93 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
 }
 
 const styles = StyleSheet.create({
-    scrollContainer: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
-    container: { flex: 1, backgroundColor: '#232d97', padding: 20, justifyContent: 'center', alignItems: 'center' },
-    title: { fontSize: 24, color: '#fff', marginBottom: 20, fontFamily: 'Quicksand-Bold' },
-    subtitle: { fontSize: 18, color: '#fff', marginBottom: 10, fontFamily: 'Quicksand-Medium' },
-    button: { backgroundColor: '#3949AB', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 25, marginVertical: 20, alignItems: 'center' },
-    buttonText: { color: '#fff', fontSize: 18, fontFamily: 'Quicksand-Bold' },
-    row: { flexDirection: 'row', marginBottom: 20, justifyContent: 'space-between', width: '100%' },
-    column: { flex: 1, marginHorizontal: 10 },
-    columnTitle: { fontSize: 16, color: '#fff', fontFamily: 'Quicksand-Bold', marginBottom: 5 },
-    columnContent: { fontSize: 16, color: '#fff', fontFamily: 'Quicksand-Medium' },
-    modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
-    modalTitle: { fontSize: 20, color: '#fff', marginBottom: 20 },
-    modalButton: { backgroundColor: '#3949AB', padding: 10, borderRadius: 10, marginVertical: 10, width: '80%', alignItems: 'center' },
-    modalButtonText: { color: '#fff', fontSize: 16, fontFamily: 'Quicksand-Bold' },
-    textInput: { backgroundColor: '#fff', width: '80%', borderRadius: 10, padding: 10, marginTop: 20 }
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#232d97',
+        padding: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 24,
+        color: '#fff',
+        marginBottom: 20,
+        fontFamily: 'Quicksand-Bold'
+    },
+    subtitle: {
+        fontSize: 18,
+        color: '#fff',
+        marginBottom: 10,
+        fontFamily: 'Quicksand-Medium'
+    },
+    button: {
+        backgroundColor: '#3949AB',
+        paddingVertical: 15,
+        paddingHorizontal: 40,
+        borderRadius: 25,
+        marginVertical: 20,
+        alignItems: 'center'
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontFamily: 'Quicksand-Bold'
+    },
+    row: {
+        flexDirection: 'row',
+        marginBottom: 20,
+        justifyContent: 'space-between',
+        width: '100%'
+    },
+    column: {
+        flex: 1,
+        marginHorizontal: 10
+    },
+    columnTitle: {
+        fontSize: 16,
+        color: '#fff',
+        fontFamily: 'Quicksand-Bold',
+        marginBottom: 5
+    },
+    columnContent: {
+        fontSize: 16,
+        color: '#fff',
+        fontFamily: 'Quicksand-Medium'
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    modalTitle: {
+        fontSize: 20,
+        color: '#fff',
+        marginBottom: 20
+    },
+    modalButton: {
+        backgroundColor: '#3949AB',
+        padding: 10,
+        borderRadius: 10,
+        marginVertical: 10,
+        width: '80%',
+        alignItems: 'center'
+    },
+    modalButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontFamily: 'Quicksand-Bold'
+    },
+    textInput: {
+        backgroundColor: '#fff',
+        width: '80%',
+        borderRadius: 10,
+        padding: 10,
+        marginTop: 20
+    }
 });

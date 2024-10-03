@@ -51,13 +51,12 @@ export default function TelaCadastro() {
       return;
     }
 
-    setLoading(true); // Iniciar o spinner
+    setLoading(true);
 
     createUserWithEmailAndPassword(auth, email, senha)
       .then(async (userCredential) => {
         const user = userCredential.user;
 
-        // Salvar dados adicionais no Firestore
         await setDoc(doc(db, "usuarios", user.uid), {
           nome,
           email,
@@ -66,12 +65,12 @@ export default function TelaCadastro() {
           tipoUsuario,
         });
 
-        setLoading(false); // Parar o spinner
+        setLoading(false);
         Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-        router.push('/paginaInicial'); // Redirecionar para a Tela de Home
+        router.push('/paginaInicial');
       })
       .catch((error) => {
-        setLoading(false); // Parar o spinner
+        setLoading(false);
         Alert.alert('Erro', error.message);
       });
   };
@@ -79,7 +78,7 @@ export default function TelaCadastro() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined} // Ajuste para iOS
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <StatusBar hidden={true} />
@@ -110,7 +109,7 @@ export default function TelaCadastro() {
         <TextInputMask
           type={'custom'}
           options={{
-            mask: '99/99/9999', // Máscara para data
+            mask: '99/99/9999',
           }}
           style={styles.input}
           placeholder="Data de Nascimento"
@@ -159,7 +158,7 @@ export default function TelaCadastro() {
         </View>
 
         {loading ? (
-          <ActivityIndicator size="large" color="#FF5722" /> // Spinner de carregamento
+          <ActivityIndicator size="large" color="#FF5722" />
         ) : (
           <TouchableOpacity style={styles.button} onPress={handleCadastro}>
             <Text style={styles.buttonText}>Cadastrar</Text>
@@ -210,7 +209,7 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   tipoButtonSelected: {
-    backgroundColor: '#FF5722', // Cor alterada para indicar o botão selecionado
+    backgroundColor: '#FF5722',
   },
   tipoButtonText: {
     color: '#FFFFFF',

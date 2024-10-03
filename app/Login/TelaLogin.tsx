@@ -4,12 +4,12 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, BackHandler, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { auth, db } from '../../config/firebase-config'; // Corrigido para importar `db`
+import { auth, db } from '../../config/firebase-config';
 
 export default function TelaLogin() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [loading, setLoading] = useState(false); // Estado para o spinner
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [fontsLoaded] = useFonts({
     'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
@@ -18,13 +18,13 @@ export default function TelaLogin() {
 
   useEffect(() => {
     const backAction = () => {
-      router.replace('/paginaInicial'); // Redirecionar para a tela de página inicial
-      return true; // Prevenir o comportamento padrão de sair do app
+      router.replace('/paginaInicial');
+      return true;
     };
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
-    return () => backHandler.remove(); // Limpar o listener ao desmontar o componente
+    return () => backHandler.remove();
   }, []);
 
   const handleLogin = async () => {
@@ -33,13 +33,12 @@ export default function TelaLogin() {
       return;
     }
 
-    setLoading(true); // Iniciar o spinner
+    setLoading(true);
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, senha);
       const user = userCredential.user;
 
-      // Obtendo o documento do usuário
       const userRef = doc(db, 'usuarios', user.uid);
       const userDoc = await getDoc(userRef);
 
@@ -48,9 +47,9 @@ export default function TelaLogin() {
         const tipoUsuario = userData.tipoUsuario;
 
         if (tipoUsuario === 'populacao') {
-          router.push('/Home/TelaDeHomeUsuario'); // Redirecionar para a tela de home do usuário
+          router.push('/Home/TelaDeHomeUsuario');
         } else if (tipoUsuario === 'saude') {
-          router.push('/Home/TelaDeHomeProfissional'); // Redirecionar para a tela de home do profissional
+          router.push('/Home/TelaDeHomeProfissional');
         } else {
           Alert.alert('Erro', 'Tipo de usuário desconhecido.');
         }
@@ -61,7 +60,7 @@ export default function TelaLogin() {
       console.error(error);
       Alert.alert('Erro', 'Falha ao realizar login. Verifique suas credenciais e tente novamente.');
     } finally {
-      setLoading(false); // Parar o spinner
+      setLoading(false);
     }
   };
 
@@ -88,7 +87,7 @@ export default function TelaLogin() {
       />
 
       {loading ? (
-        <ActivityIndicator size="large" color="#ff5721" /> // Spinner de carregamento
+        <ActivityIndicator size="large" color="#ff5721" />
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Entrar</Text>
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#232d97', // Azul escuro
+    backgroundColor: '#232d97',
   },
   title: {
     fontSize: 24,

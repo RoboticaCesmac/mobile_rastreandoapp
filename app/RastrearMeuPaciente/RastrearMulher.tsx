@@ -6,8 +6,6 @@ import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-nativ
 import { auth } from '../../config/firebase-config';
 
 
-
-
 export default function RastrearMulher() {
     
     const router = useRouter();
@@ -15,7 +13,7 @@ export default function RastrearMulher() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                router.replace('/Login/TelaLogin'); // Redireciona para TelaLogin se não estiver autenticado
+                router.replace('/Login/TelaLogin');
             }
         });
     }, []);
@@ -25,7 +23,6 @@ export default function RastrearMulher() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
-            {/* Botão Mudar */}
             <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
                 <Text style={styles.changeButtonText}>Trocar</Text>
