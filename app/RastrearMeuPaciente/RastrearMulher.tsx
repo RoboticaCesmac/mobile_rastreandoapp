@@ -1,14 +1,18 @@
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
+import LottieView from 'lottie-react-native';
 import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../config/firebase-config';
 
-
-export default function RastrearMulher() {
-    
+export default function PerfilIndividualMulher() {
     const router = useRouter();
+    const [fontsLoaded] = useFonts({
+        'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
+        'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
+    });
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -16,9 +20,20 @@ export default function RastrearMulher() {
                 router.replace('/Login/TelaLogin');
             }
         });
+
+        const backAction = () => {
+            router.replace('/Home/TelaDeHomeProfissional');
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => {
+            backHandler.remove();
+            unsubscribe();
+        };
     }, []);
 
-    
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
@@ -30,25 +45,34 @@ export default function RastrearMulher() {
 
             <Text style={styles.title}>Mulher</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colo de Útero')}>
-                <FontAwesome5 name="" size={24} color="white" />
-                <Text style={styles.buttonText}>Colo de Útero</Text>
-            </TouchableOpacity>
+            <View style={styles.grid}>
+            <TouchableOpacity style={styles.squareButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colo de Útero')}>
+                    <FontAwesome5 name="venus" size={30} color="white" />
+                    <Text style={styles.buttonText}>Colo de Útero</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Mama')}>
-                <FontAwesome5 name="" size={24} color="white" />
-                <Text style={styles.buttonText}>Mama</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.squareButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Mama')}>
+                <FontAwesome5 name="ribbon" size={30} color="white" />
+                    <Text style={styles.buttonText}>Mama</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colorretal')}>
-                <FontAwesome5 name="" size={24} color="white" />
-                <Text style={styles.buttonText}>Colorretal</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.squareButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colorretal')}>
+                <FontAwesome5 name="stethoscope" size={30} color="white" />
+                    <Text style={styles.buttonText}>Colorretal</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Pulmão')}>
-                <FontAwesome5 name="lungs" size={24} color="white" />
-                <Text style={styles.buttonText}>Pulmão</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.squareButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Pulmão')}>
+                <FontAwesome5 name="lungs" size={30} color="white" />
+                    <Text style={styles.buttonText}>Pulmão</Text>
+                </TouchableOpacity>
+            </View>
+
+            <LottieView
+                source={require('../../assets/lottie/mulher2.json')}
+                autoPlay
+                loop={true}
+                style={styles.lottie}
+            />
         </View>
     );
 }
@@ -58,13 +82,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1A237E',
-        paddingHorizontal: 20,
-    },
-    backButton: {
-        position: 'absolute',
-        top: 40,
-        left: 20,
+        backgroundColor: '#232d97',
+        paddingHorizontal: 30,
+        padding: 30,
     },
     changeButton: {
         position: 'absolute',
@@ -75,6 +95,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#3949AB',
         borderRadius: 20,
+        fontFamily: 'Quicksand-Bold',
     },
     changeButtonText: {
         color: '#FFFFFF',
@@ -83,28 +104,42 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         alignItems: 'center',
         marginTop: -2,
+        fontFamily: 'Quicksand-Bold',
     },
     title: {
         fontSize: 24,
         color: '#FFFFFF',
-        marginBottom: 20,
-        fontWeight: 'bold',
+        marginTop: 130,
+        marginBottom: -100,
+        fontFamily: 'Quicksand-Bold',
     },
-    button: {
+    grid: {
         flexDirection: 'row',
-        alignItems: 'center',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 130,
+        marginBottom: -120,
+
+
+    },
+    squareButton: {
+        width: '45%',
+        aspectRatio: 1,
         backgroundColor: '#3949AB',
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 25,
         marginVertical: 10,
-        width: '80%',
         justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
+        fontFamily: 'Quicksand-Bold',
+        padding: 6,
     },
     buttonText: {
         color: '#FFFFFF',
         fontSize: 18,
-        marginLeft: 10,
+        marginTop: 10,
+        fontFamily: 'Quicksand-Bold',
+        textAlign: 'center',
     },
     iconMudar: {
         marginRight: 8,
@@ -112,5 +147,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center',
+    },
+    lottie: {
+        width: 485,
+        height: 300,
+        marginTop: 75,
+        marginLeft: 30,
     },
 });

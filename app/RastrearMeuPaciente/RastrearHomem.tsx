@@ -1,16 +1,17 @@
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../config/firebase-config';
 
-
-
-
-export default function RastrearHomem() {
-    
+export default function PerfilIndividualHomem() {
     const router = useRouter();
+    const [fontsLoaded] = useFonts({
+        'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
+        'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
+      });
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -18,9 +19,20 @@ export default function RastrearHomem() {
                 router.replace('/Login/TelaLogin');
             }
         });
+
+        const backAction = () => {
+            router.replace('/Home/TelaDeHomeProfissional');
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => {
+            backHandler.remove();
+            unsubscribe();
+        };
     }, []);
 
-    
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
@@ -33,17 +45,14 @@ export default function RastrearHomem() {
             <Text style={styles.title}>Homem</Text>
 
             <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Próstata')}>
-                <FontAwesome5 name="male" size={24} color="white" />
                 <Text style={styles.buttonText}>Próstata</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colorretal')}>
-                <FontAwesome5 name="" size={24} color="white" />
                 <Text style={styles.buttonText}>Colorretal</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Pulmão')}>
-                <FontAwesome5 name="lungs" size={24} color="white" />
                 <Text style={styles.buttonText}>Pulmão</Text>
             </TouchableOpacity>
         </View>
@@ -55,8 +64,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1A237E',
+        backgroundColor: '#232d97',
         paddingHorizontal: 20,
+        fontFamily: 'Quicksand-Bold',
     },
     backButton: {
         position: 'absolute',
@@ -72,6 +82,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#3949AB',
         borderRadius: 20,
+        fontFamily: 'Quicksand-Bold',
     },
     changeButtonText: {
         color: '#FFFFFF',
@@ -80,12 +91,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         alignItems: 'center',
         marginTop: -2,
+        fontFamily: 'Quicksand-Bold',
     },
     title: {
         fontSize: 24,
         color: '#FFFFFF',
         marginBottom: 20,
-        fontWeight: 'bold',
+        fontFamily: 'Quicksand-Bold',
     },
     button: {
         flexDirection: 'row',
@@ -97,11 +109,13 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         width: '80%',
         justifyContent: 'center',
+        fontFamily: 'Quicksand-Bold',
     },
     buttonText: {
         color: '#FFFFFF',
         fontSize: 18,
         marginLeft: 10,
+        fontFamily: 'Quicksand-Bold',
     },
     iconMudar: {
         marginRight: 8,

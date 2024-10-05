@@ -53,7 +53,7 @@ export default function TelaDeHomeProfissional() {
         Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
       });
   };
-  
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />

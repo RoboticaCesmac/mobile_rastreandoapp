@@ -13,20 +13,20 @@ export default function PerfilIndividualHomem() {
         'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
       });
 
-    useEffect(() => {
+      useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
                 router.replace('/Login/TelaLogin');
             }
         });
-
+    
         const backAction = () => {
-            router.replace('/Home/TelaDeHomeUsuario');
+            router.back();
             return true;
         };
-
+    
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
+    
         return () => {
             backHandler.remove();
             unsubscribe();
