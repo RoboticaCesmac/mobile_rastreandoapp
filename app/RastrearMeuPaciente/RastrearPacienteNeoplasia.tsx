@@ -91,6 +91,34 @@ export default function RastrearPacienteNeoplasia() {
             console.error('Usuário não está logado');
         }
     };
+    
+    const redirecionarParaCondutaManejoResultados = async () => {
+        const user = auth.currentUser;
+
+        if (user) {
+            const userDocRef = doc(firestore, 'usuarios', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const genero = userData.genero;
+
+                // Redirecionar para a página de Indicações de Rastreio com os parâmetros corretos
+                if (genero && neoplasia) {
+                    router.push({
+                        pathname: `/RastrearMeuPaciente/CondutaManejoResultados/CondutaManejoResultados`,
+                        params: { sexo: genero, neoplasia }, // Passa os parâmetros dinâmicos
+                    });
+                } else {
+                    console.error('Dados de gênero ou neoplasia ausentes');
+                }
+            } else {
+                console.error('Documento do usuário não encontrado');
+            }
+        } else {
+            console.error('Usuário não está logado');
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -106,7 +134,9 @@ export default function RastrearPacienteNeoplasia() {
                 onPress={redirecionarParaIndicacoesRastreio}>
                 <Text style={styles.buttonText}>Indicações de Rastreio</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity 
+            style={styles.button}
+            onPress={redirecionarParaCondutaManejoResultados}>
                 <Text style={styles.buttonText}>Conduta e Manejo Após Resultados</Text>
             </TouchableOpacity>
         </View>

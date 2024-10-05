@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons'; // Biblioteca de ícones
+import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { signOut } from 'firebase/auth';
@@ -15,35 +15,30 @@ export default function TelaDeHomeUsuario() {
     'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
   });
   const [userName, setUserName] = useState('');
+  const [userSexo, setUserSexo] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
-      const onBackPress = () => {
-        return true;
-      };
-
+      const onBackPress = () => true; // Bloqueia o botão voltar
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
 
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchUserNameAndSexo = async () => {
       const user = auth.currentUser;
       if (user) {
         const userRef = doc(db, 'usuarios', user.uid);
         const docSnap = await getDoc(userRef);
-
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setUserName(userData.nome);
+          setUserSexo(userData.genero); // Armazena o sexo do usuário
         }
       }
     };
-
-    fetchUserName();
+    fetchUserNameAndSexo();
   }, []);
 
   const handlePerfilIndividualPress = async () => {
@@ -51,11 +46,8 @@ export default function TelaDeHomeUsuario() {
     if (user) {
       const userRef = doc(db, 'usuarios', user.uid);
       const docSnap = await getDoc(userRef);
-
       if (docSnap.exists()) {
-        const userData = docSnap.data();
-        const genero = userData.genero;
-
+        const genero = docSnap.data().genero;
         if (genero === 'mulher') {
           router.push('/PerfilIndividual/PerfilIndividualMulher');
         } else if (genero === 'homem') {
@@ -69,11 +61,20 @@ export default function TelaDeHomeUsuario() {
     }
   };
 
+  const handleMarcarConsultaPress = () => {
+    if (userSexo) {
+      router.push({
+        pathname: '/MarcarConsulta/MarcarConsulta',
+        params: { sexo: userSexo }, // Passa o sexo como parâmetro
+      });
+    } else {
+      Alert.alert('Erro', 'Sexo do usuário não encontrado.');
+    }
+  };
+
   const handleLogout = () => {
     signOut(auth)
-      .then(() => {
-        router.replace('/Login/TelaLogin');
-      })
+      .then(() => router.replace('/Login/TelaLogin'))
       .catch((error) => {
         console.error('Erro ao realizar logout:', error);
         Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
@@ -97,7 +98,7 @@ export default function TelaDeHomeUsuario() {
       <TouchableOpacity style={styles.button} onPress={() => router.push('/ProximosExames/ProximosExames')}>
         <Text style={styles.buttonText}>Seus próximos exames</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta/MarcarConsulta')}>
+      <TouchableOpacity style={styles.button} onPress={handleMarcarConsultaPress}>
         <Text style={styles.buttonText}>Marque uma consulta</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -114,11 +115,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#232d97',
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 30,
   },
   lottie: {
     width: 200,
