@@ -153,54 +153,23 @@ export default function PerfilInformacoesNeoplasia() {
 
     const redirecionarParaSinaisESintomas = async () => {
         const user = authInstance.currentUser;
-
+    
         if (user) {
             const userDocRef = doc(firestore, 'usuarios', user.uid);
             const userDoc = await getDoc(userDocRef);
-
+    
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 const genero = userData.genero;
-
-                let caminho = '';
-
-                if (genero === 'homem') {
-                    switch (neoplasia) {
-                        case 'Próstata':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasProstataMasculino';
-                            break;
-                        case 'Colorretal':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasColorretalMasculino';
-                            break;
-                        case 'Pulmão':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasPulmaoMasculino';
-                            break;
-                        default:
-                            console.error('Neoplasia desconhecida para homens');
-                    }
-                } else if (genero === 'mulher') {
-                    switch (neoplasia) {
-                        case 'Colo de Útero':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasColoDeUteroFeminino';
-                            break;
-                        case 'Mama':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasMamaFeminino';
-                            break;
-                        case 'Colorretal':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasColorretalFeminino';
-                            break;
-                        case 'Pulmão':
-                            caminho = '/PerfilIndividual/SinaisESintomas/SinaisESintomasPulmaoFeminino';
-                            break;
-                        default:
-                            console.error('Neoplasia desconhecida para mulheres');
-                    }
+    
+                // Usar a rota correta definida no expo-router
+                if (genero && neoplasia) {
+                    router.push({
+                        pathname: `/PerfilIndividual/SinaisESintomas/SinaisESintomas`, // Garante que o caminho corresponde à estrutura de pastas
+                        params: { sexo: genero, neoplasia }, // Parâmetros dinâmicos
+                    });
                 } else {
-                    console.error('Gênero desconhecido');
-                }
-
-                if (caminho) {
-                    router.push(caminho as Href<string>);
+                    console.error('Dados de gênero ou neoplasia ausentes');
                 }
             } else {
                 console.error('Documento do usuário não encontrado');
@@ -209,6 +178,7 @@ export default function PerfilInformacoesNeoplasia() {
             console.error('Usuário não está logado');
         }
     };
+    
 
     return (
         <View style={styles.container}>

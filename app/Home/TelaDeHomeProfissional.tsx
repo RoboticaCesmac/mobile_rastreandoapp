@@ -1,12 +1,17 @@
 import { Ionicons } from '@expo/vector-icons'; // Biblioteca de ícones
 import { useFocusEffect, useRouter } from 'expo-router';
 import { signOut } from 'firebase/auth';
-import React, { useCallback } from 'react';
-import { Alert, BackHandler, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { auth } from '../../config/firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
+import LottieView from 'lottie-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { auth, db } from '../../config/firebase-config';
+
 
 export default function TelaDeHomeProfissional() {
   const router = useRouter();
+  const [userName, setUserName] = useState('');
+
 
   useFocusEffect(
     useCallback(() => {
@@ -20,6 +25,23 @@ export default function TelaDeHomeProfissional() {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
+  
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, 'usuarios', user.uid);
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserName(userData.nome);
+        }
+      }
+    };
+
+    fetchUserName();
+  }, []);
 
   const handleLogout = () => {
     signOut(auth)
@@ -35,7 +57,14 @@ export default function TelaDeHomeProfissional() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <Image source={require('../../assets/images/RASTREANDO.png')} style={styles.logo} />
+      <LottieView
+        source={require('../../assets/lottie/logo.json')}
+        autoPlay
+        loop={true}
+        speed={0.7}
+        style={styles.lottie}
+      />
+      {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
         <Text style={styles.buttonText}>Rastrear Meu Paciente</Text>
       </TouchableOpacity>
@@ -90,5 +119,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+  },
+  lottie: {
+    width: 200,
+    height: 200,
+  },
+  welcomeText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontFamily: 'Quicksand-Bold',
+    marginVertical: 20,
   },
 });

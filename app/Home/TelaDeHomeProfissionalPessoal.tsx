@@ -1,12 +1,20 @@
 import { Ionicons } from '@expo/vector-icons'; // Biblioteca de ícones
+import { useFonts } from 'expo-font';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import React, { useCallback } from 'react';
-import { Alert, BackHandler, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import LottieView from 'lottie-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../../config/firebase-config';
 
-export default function TelaDeHomeProfissionalPessoal() {
+export default function TelaDeHomeUsuario() {
   const router = useRouter();
+  const [fontsLoaded] = useFonts({
+    'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
+    'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
+  });
+  const [userName, setUserName] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -20,6 +28,23 @@ export default function TelaDeHomeProfissionalPessoal() {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, 'usuarios', user.uid);
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserName(userData.nome);
+        }
+      }
+    };
+
+    fetchUserName();
+  }, []);
 
   const handlePerfilIndividualPress = async () => {
     const user = auth.currentUser;
@@ -44,15 +69,32 @@ export default function TelaDeHomeProfissionalPessoal() {
     }
   };
 
-  const handleBack = () => {
-    router.push('/Home/TelaDeHomeProfissional');
-
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        router.replace('/Login/TelaLogin');
+      })
+      .catch((error) => {
+        console.error('Erro ao realizar logout:', error);
+        Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
+      });
   };
   
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <Image source={require('../../assets/images/RASTREANDO.png')} style={styles.logo} />
+      <LottieView
+        source={require('../../assets/lottie/logo.json')}
+        autoPlay
+        loop={true}
+        speed={0.7}
+        style={styles.lottie}
+      />
+      {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={handlePerfilIndividualPress}>
         <Text style={styles.buttonText}>Perfil Individual</Text>
       </TouchableOpacity>
@@ -66,6 +108,10 @@ export default function TelaDeHomeProfissionalPessoal() {
         <Ionicons name="exit-outline" size={24} color="#FFFFFF" />
         <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="exit-outline" size={24} color="#FFFFFF" />
+        <Text style={styles.logoutButtonText}>Sair</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -75,12 +121,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1A237E',
+    backgroundColor: '#232d97',
   },
   logo: {
     width: 150,
     height: 150,
     marginBottom: 30,
+  },
+  lottie: {
+    width: 200,
+    height: 200,
+  },
+  welcomeText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontFamily: 'Quicksand-Bold',
+    marginVertical: 20,
   },
   button: {
     backgroundColor: '#3949AB',
@@ -94,11 +150,26 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
+    fontFamily: 'Quicksand-Bold',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    backgroundColor: '#D32F2F',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
     fontWeight: 'bold',
+    marginLeft: 10,
   },
   backButton: {
     flexDirection: 'row',
-    backgroundColor: 'purple',
+    backgroundColor: '#3949AB',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
@@ -106,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backButtonText: {
-    color: '#FFFFFF',
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
