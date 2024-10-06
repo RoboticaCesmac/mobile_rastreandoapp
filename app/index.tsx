@@ -44,6 +44,7 @@ export default function SplashScreenApp() {
       />
       <Text style={styles.title}>RASTREANDO</Text>
       <Text style={styles.subtitle}>APP</Text>
+      <Text style={styles.subtitle}>TESTE</Text>
     </View>
   );
 }

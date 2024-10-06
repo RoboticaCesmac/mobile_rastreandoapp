@@ -28,6 +28,7 @@ export default function PaginaInicial() {
       <StatusBar hidden={true} />
       <Text style={styles.titleRastreando}>RASTREANDO</Text>
       <Text style={styles.subtitle}>APP</Text>
+      <Text style={styles.subtitle}>TESTE</Text>
       <LottieView
         source={require('../assets/lottie/logo.json')}
         autoPlay
