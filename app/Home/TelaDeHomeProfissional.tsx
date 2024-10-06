@@ -57,14 +57,14 @@ export default function TelaDeHomeProfissional() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
+      {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
       <LottieView
-        source={require('../../assets/lottie/logo.json')}
+        source={require('../../assets/lottie/laco.json')}
         autoPlay
-        loop={true}
-        speed={0.7}
+        loop={false}
+        speed={0.8}
         style={styles.lottie}
       />
-      {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
         <Text style={styles.buttonText}>Rastrear Meu Paciente</Text>
       </TouchableOpacity>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1A237E',
+    backgroundColor: '#232d97',
   },
   logo: {
     width: 150,
@@ -99,11 +99,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '80%',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Quicksand-Bold',
   },
   logoutButton: {
     flexDirection: 'row',
@@ -113,21 +118,29 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   logoutButtonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
     marginLeft: 10,
+    fontFamily: 'Quicksand-Bold',
   },
   lottie: {
-    width: 200,
-    height: 200,
+    width: 400,
+    height: 400,
+    marginBottom: -80,
+    marginTop: -100,
   },
   welcomeText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 38,
     fontFamily: 'Quicksand-Bold',
     marginVertical: 20,
+    textAlign: 'center',
   },
 });

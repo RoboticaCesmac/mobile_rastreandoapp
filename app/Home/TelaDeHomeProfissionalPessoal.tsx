@@ -87,6 +87,7 @@ export default function TelaDeHomeUsuario() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
+      {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
       <LottieView
         source={require('../../assets/lottie/logo.json')}
         autoPlay
@@ -94,7 +95,6 @@ export default function TelaDeHomeUsuario() {
         speed={0.7}
         style={styles.lottie}
       />
-      {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={handlePerfilIndividualPress}>
         <Text style={styles.buttonText}>Perfil Individual</Text>
       </TouchableOpacity>
@@ -129,14 +129,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   lottie: {
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
+    marginBottom: -80,
+    marginTop: -100,
   },
   welcomeText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 38,
     fontFamily: 'Quicksand-Bold',
     marginVertical: 20,
+    textAlign: 'center',
   },
   button: {
     backgroundColor: '#3949AB',
@@ -146,6 +149,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '80%',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   buttonText: {
     color: '#FFFFFF',
@@ -160,6 +168,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   logoutButtonText: {
     color: '#FFFFFF',
@@ -175,6 +188,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   backButtonText: {
     color: 'white',

@@ -133,11 +133,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Bold',
   },
   input: {
-    width: 200,
+    width: 220,
     height: 50,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    paddingHorizontal: 30,
+    paddingHorizontal: 5,
     fontSize: 18,
     marginVertical: 10,
     fontFamily: 'Quicksand-Bold',
