@@ -153,31 +153,33 @@ export default function PerfilInformacoesNeoplasia() {
 
     const redirecionarParaSinaisESintomas = async () => {
         const user = authInstance.currentUser;
-    
+      
         if (user) {
-            const userDocRef = doc(firestore, 'usuarios', user.uid);
-            const userDoc = await getDoc(userDocRef);
-    
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                const genero = userData.genero;
-    
-                // Usar a rota correta definida no expo-router
-                if (genero && neoplasia) {
-                    router.push({
-                        pathname: `/PerfilIndividual/SinaisESintomas/SinaisESintomas`, // Garante que o caminho corresponde à estrutura de pastas
-                        params: { sexo: genero, neoplasia }, // Parâmetros dinâmicos
-                    });
-                } else {
-                    console.error('Dados de gênero ou neoplasia ausentes');
-                }
+          const userDocRef = doc(firestore, 'usuarios', user.uid);
+          const userDoc = await getDoc(userDocRef);
+      
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const genero = userData.genero;
+      
+            // Verifique se tanto o gênero quanto a neoplasia estão disponíveis
+            if (genero && neoplasia) {
+              // Redireciona para a página SinaisESintomas com os parâmetros corretos
+              router.push({
+                pathname: `/PerfilIndividual/SinaisESintomas/SinaisESintomas`, 
+                params: { sexo: genero, neoplasia }, // Passando parâmetros
+              });
             } else {
-                console.error('Documento do usuário não encontrado');
+              console.error('Dados de gênero ou neoplasia ausentes');
             }
+          } else {
+            console.error('Documento do usuário não encontrado');
+          }
         } else {
-            console.error('Usuário não está logado');
+          console.error('Usuário não está logado');
         }
-    };
+      };
+      
     
 
     return (

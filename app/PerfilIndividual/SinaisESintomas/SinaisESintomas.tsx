@@ -1,38 +1,57 @@
+import { useLocalSearchParams } from 'expo-router';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { db } from '../../../config/firebase-config'; // Certifique-se de que o caminho para seu arquivo firebase está correto
+import { db } from '../../../config/firebase-config';
 
 const SinaisESintomas: React.FC = () => {
-  const [sinaisSintomas, setSinaisSintomas] = useState<any[]>([]);
+  const { sexo, neoplasia } = useLocalSearchParams();
+  const [sinaisSintomas, setSinaisSintomas] = useState<{ combinacao: string; sintomas: string[] }[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchSinaisSintomas = async () => {
       try {
-        // 1. Buscar IDs dos administradores
-        const adminSnapshot = await getDocs(collection(db, 'administradores'));
-        const adminIds = adminSnapshot.docs.map(doc => doc.id); // Extrair os IDs dos administradores
+        const sintomasAgrupados: { [key: string]: string[] } = {};
 
-        const allSintomasArray: any[] = [];
+        if (sexo && neoplasia) {
+          const combinacao = `${sexo}_${neoplasia}`.toLowerCase(); // Convertemos para minúsculas
+          console.log(`Buscando sintomas para combinação: ${combinacao}`);
 
-        // 2. Para cada administrador, buscar os sinais e sintomas na subcoleção 'combinacoes'
-        for (const adminId of adminIds) {
-          const combinacoesRef = collection(db, `sinaisSintomas/${adminId}/combinacoes`);
-          const querySnapshot = await getDocs(combinacoesRef);
-          
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            allSintomasArray.push({
-              adminId: adminId, // Adiciona o ID do administrador para referência
-              id: doc.id,       // ID da combinação (ex: 'homem_pulmao')
-              sintomas: data.sintomas || [],
+          // 1. Buscar IDs dos administradores
+          const adminSnapshot = await getDocs(collection(db, 'administradores'));
+          const adminIds = adminSnapshot.docs.map(doc => doc.id);
+
+          // 2. Para cada administrador, buscar os sinais e sintomas na subcoleção 'combinacoes'
+          for (const adminId of adminIds) {
+            console.log(`Verificando combinação para administrador: ${adminId}`);
+            const combinacoesRef = collection(db, `sinaisSintomas/${adminId}/combinacoes`);
+            const querySnapshot = await getDocs(combinacoesRef);
+
+            querySnapshot.forEach((doc) => {
+              if (doc.id.toLowerCase() === combinacao) { // Garantimos que ambos estão em minúsculas
+                console.log(`Sintomas encontrados para ${combinacao}:`, doc.data().sintomas);
+                const data = doc.data();
+                if (sintomasAgrupados[combinacao]) {
+                  sintomasAgrupados[combinacao] = [...sintomasAgrupados[combinacao], ...data.sintomas];
+                } else {
+                  sintomasAgrupados[combinacao] = data.sintomas || [];
+                }
+              }
             });
-          });
+          }
+
+          // 3. Convertendo o objeto agrupado em um array de combinações
+          const allSintomasArray = Object.entries(sintomasAgrupados).map(([combinacao, sintomas]) => ({
+            combinacao,
+            sintomas: Array.from(new Set(sintomas)), // Remover duplicatas de sintomas
+          }));
+
+          console.log("Sintomas agrupados final:", allSintomasArray);
+
+          setSinaisSintomas(allSintomasArray);
         }
 
-        // 3. Atualizar o estado com todos os sinais e sintomas
-        setSinaisSintomas(allSintomasArray);
         setLoading(false);
       } catch (error) {
         console.error('Erro ao buscar sinais e sintomas:', error);
@@ -41,7 +60,7 @@ const SinaisESintomas: React.FC = () => {
     };
 
     fetchSinaisSintomas();
-  }, []);
+  }, [sexo, neoplasia]);
 
   if (loading) {
     return (
@@ -51,22 +70,26 @@ const SinaisESintomas: React.FC = () => {
     );
   }
 
+  if (sinaisSintomas.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Nenhum sintoma encontrado para {sexo} - {neoplasia}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-                    <StatusBar hidden={true} />
+      <StatusBar hidden={true} />
 
-      <Text style={styles.title}>Sinais e Sintomas</Text>
+      <Text style={styles.title}>Sinais e Sintomas para {sexo} - {neoplasia}</Text>
       <FlatList
         data={sinaisSintomas}
-        keyExtractor={(item) => item.adminId + item.id} // Usando o adminId + id da combinação como chave única
+        keyExtractor={(item, index) => `${item.combinacao}_${index}`}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text style={styles.itemText}>
-              Administrador: {item.adminId} - Combinação: {item.id}
-            </Text>
-            <Text style={styles.sintomasText}>
-              Sintomas: {item.sintomas.join(', ')}
-            </Text>
+            <Text style={styles.itemText}>Combinação: {item.combinacao}</Text>
+            <Text style={styles.sintomasText}>Sintomas: {item.sintomas.join(', ')}</Text>
           </View>
         )}
       />
@@ -79,17 +102,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#232d97',  // Mesma cor de fundo
+    backgroundColor: '#232d97',
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
-    color: '#FFFFFF',  // Cor branca como no título anterior
+    color: '#FFFFFF',
     marginBottom: 20,
-    fontFamily: 'Quicksand-Bold',  // Fonte personalizada
+    fontFamily: 'Quicksand-Bold',
   },
   item: {
-    backgroundColor: '#3949AB',  // Mesma cor dos botões
+    backgroundColor: '#3949AB',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -98,13 +121,13 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
-    color: '#FFFFFF',  // Texto em branco
-    fontFamily: 'Quicksand-Medium',  // Fonte personalizada
+    color: '#FFFFFF',
+    fontFamily: 'Quicksand-Medium',
     marginBottom: 5,
   },
   sintomasText: {
     fontSize: 16,
-    color: '#FFFFFF',  // Texto em branco para os sintomas
+    color: '#FFFFFF',
     fontFamily: 'Quicksand-Medium',
   },
 });

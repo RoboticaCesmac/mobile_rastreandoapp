@@ -1,38 +1,47 @@
+import { useLocalSearchParams } from 'expo-router';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { db } from '../../../config/firebase-config'; // Certifique-se de que o caminho para seu arquivo firebase está correto
 
 const SinaisAlarmeFatoresRisco: React.FC = () => {
+  const { sexo, neoplasia } = useLocalSearchParams(); // Pegando os parâmetros dinâmicos
   const [sinaisFatores, setSinaisFatores] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchSinaisFatores = async () => {
       try {
+        const combinacao = `${sexo}_${neoplasia}`.toLowerCase(); // Converter para minúsculas
+        console.log(`Buscando dados para combinação: ${combinacao}`);
+
+        const sintomasAgrupados: any[] = [];
+
         // 1. Buscar IDs dos administradores
         const adminSnapshot = await getDocs(collection(db, 'administradores'));
         const adminIds = adminSnapshot.docs.map(doc => doc.id); // Extrair os IDs dos administradores
 
-        const allFatoresArray: any[] = [];
-
         // 2. Para cada administrador, buscar os sinais de alarme e fatores de risco na subcoleção 'combinacoes'
         for (const adminId of adminIds) {
+          console.log(`Verificando dados para administrador: ${adminId}`);
           const combinacoesRef = collection(db, `sinaisAlarmeFatoresRisco/${adminId}/combinacoes`);
           const querySnapshot = await getDocs(combinacoesRef);
           
           querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            allFatoresArray.push({
-              adminId: adminId, // Adiciona o ID do administrador para referência
-              id: doc.id,       // ID da combinação (ex: 'homem_pulmao')
-              sinais: data.sintomas || [],  // Assumindo que o campo é 'sintomas'
-            });
+            if (doc.id.toLowerCase() === combinacao) { // Verifica se a combinação é a correta
+              console.log(`Dados encontrados para combinação: ${combinacao}`);
+              const data = doc.data();
+              sintomasAgrupados.push({
+                adminId: adminId, // Adiciona o ID do administrador para referência
+                id: doc.id,       // ID da combinação (ex: 'homem_pulmao')
+                sinais: data.sintomas || [],  // Assumindo que o campo é 'sintomas'
+              });
+            }
           });
         }
 
         // 3. Atualizar o estado com todos os sinais de alarme e fatores de risco
-        setSinaisFatores(allFatoresArray);
+        setSinaisFatores(sintomasAgrupados);
         setLoading(false);
       } catch (error) {
         console.error('Erro ao buscar sinais de alarme e fatores de risco:', error);
@@ -40,8 +49,10 @@ const SinaisAlarmeFatoresRisco: React.FC = () => {
       }
     };
 
-    fetchSinaisFatores();
-  }, []);
+    if (sexo && neoplasia) {
+      fetchSinaisFatores();
+    }
+  }, [sexo, neoplasia]);
 
   if (loading) {
     return (
