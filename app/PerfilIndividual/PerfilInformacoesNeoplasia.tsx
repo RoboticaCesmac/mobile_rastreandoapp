@@ -2,9 +2,11 @@ import { useFonts } from 'expo-font';
 import { Href, useLocalSearchParams, useRouter } from 'expo-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import LottieView from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../config/firebase-config';
+
 
 const firestore = getFirestore();
 const authInstance = getAuth();
@@ -185,6 +187,13 @@ export default function PerfilInformacoesNeoplasia() {
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
+            <LottieView
+        source={require('../../assets/lottie/lupa2.json')}
+        autoPlay
+        loop={false} // Não repetir a animação
+        speed={3} // Controlando a velocidade, 0.5 para metade da velocidade normal
+        style={styles.lottie}
+      />
             <Text style={styles.title}>{title}</Text>
             <TouchableOpacity
                 style={styles.button}
@@ -219,6 +228,16 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         marginBottom: 20,
         fontFamily: 'Quicksand-Bold',
+        backgroundColor: '#ff5721',
+        borderRadius: 50,
+        paddingHorizontal: 20,
+        textAlign: 'center',
+        lineHeight: 50,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 30,
+        elevation: 10,
     },
     button: {
         backgroundColor: '#3949AB',
@@ -228,10 +247,21 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         width: '80%',
         alignItems: 'center',
+        shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    // Propriedade de sombra para Android
+    elevation: 5,      
     },
     buttonText: {
         color: '#FFFFFF',
         fontSize: 18,
         fontFamily: 'Quicksand-Bold',
     },
+    lottie: {
+        width: 200,
+        height: 200,
+        alignSelf: 'center',
+      },
 });
