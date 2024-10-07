@@ -2,45 +2,42 @@ import { useLocalSearchParams } from 'expo-router';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { db } from '../../../config/firebase-config'; // Certifique-se de que o caminho para seu arquivo firebase está correto
+import { db } from '../../../config/firebase-config';
 
 const SinaisAlarmeFatoresRisco: React.FC = () => {
-  const { sexo, neoplasia } = useLocalSearchParams(); // Pegando os parâmetros dinâmicos
+  const { sexo, neoplasia } = useLocalSearchParams();
   const [sinaisFatores, setSinaisFatores] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchSinaisFatores = async () => {
       try {
-        const combinacao = `${sexo}_${neoplasia}`.toLowerCase(); // Converter para minúsculas
+        const combinacao = `${sexo}_${neoplasia}`.toLowerCase();
         console.log(`Buscando dados para combinação: ${combinacao}`);
 
         const sintomasAgrupados: any[] = [];
 
-        // 1. Buscar IDs dos administradores
         const adminSnapshot = await getDocs(collection(db, 'administradores'));
-        const adminIds = adminSnapshot.docs.map(doc => doc.id); // Extrair os IDs dos administradores
+        const adminIds = adminSnapshot.docs.map(doc => doc.id);
 
-        // 2. Para cada administrador, buscar os sinais de alarme e fatores de risco na subcoleção 'combinacoes'
         for (const adminId of adminIds) {
           console.log(`Verificando dados para administrador: ${adminId}`);
           const combinacoesRef = collection(db, `sinaisAlarmeFatoresRisco/${adminId}/combinacoes`);
           const querySnapshot = await getDocs(combinacoesRef);
-          
+
           querySnapshot.forEach((doc) => {
-            if (doc.id.toLowerCase() === combinacao) { // Verifica se a combinação é a correta
+            if (doc.id.toLowerCase() === combinacao) {
               console.log(`Dados encontrados para combinação: ${combinacao}`);
               const data = doc.data();
               sintomasAgrupados.push({
-                adminId: adminId, // Adiciona o ID do administrador para referência
-                id: doc.id,       // ID da combinação (ex: 'homem_pulmao')
-                sinais: data.sintomas || [],  // Assumindo que o campo é 'sintomas'
+                adminId: adminId,
+                id: doc.id,
+                sinais: data.sintomas || [],
               });
             }
           });
         }
 
-        // 3. Atualizar o estado com todos os sinais de alarme e fatores de risco
         setSinaisFatores(sintomasAgrupados);
         setLoading(false);
       } catch (error) {
@@ -69,13 +66,13 @@ const SinaisAlarmeFatoresRisco: React.FC = () => {
       <Text style={styles.title}>Sinais de Alarme e Fatores de Risco</Text>
       <FlatList
         data={sinaisFatores}
-        keyExtractor={(item) => item.adminId + item.id} // Usando o adminId + id da combinação como chave única
+        keyExtractor={(item) => item.adminId + item.id}
         renderItem={({ item }) => (
           <View>
             {item.sinais.map((sinal: any, index: number) => (
               <View key={index} style={styles.item}>
                 <Image
-                  source={{ uri: sinal.imagem }} // Assumindo que 'imagem' é o campo com o link para o Storage
+                  source={{ uri: sinal.imagem }}
                   style={styles.image}
                   resizeMode="cover"
                 />
@@ -94,34 +91,50 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#232d97',  // Mesma cor de fundo
+    backgroundColor: '#232d97',
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
-    color: '#FFFFFF',  // Cor branca como no título anterior
+    color: '#FFFFFF',
     marginBottom: 20,
-    fontFamily: 'Quicksand-Bold',  // Fonte personalizada
+    fontFamily: 'Quicksand-Bold',
+    backgroundColor: '#ff5721',
+    borderRadius: 50,
+    paddingHorizontal: 20,
+    textAlign: 'center',
+    lineHeight: 50,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
+    marginTop: 30,
   },
   item: {
-    backgroundColor: '#3949AB',  // Mesma cor dos botões
+    backgroundColor: '#3949AB',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
-    alignItems: 'center',  // Centralizando o conteúdo
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
   },
   image: {
     width: '100%',
-    height: 200,  // Ajuste de altura da imagem
+    height: 200,
     borderRadius: 10,
     marginBottom: 10,
   },
   description: {
     fontSize: 16,
-    color: '#FFFFFF',  // Texto em branco para a descrição
-    fontFamily: 'Quicksand-Medium',  // Fonte personalizada
+    color: '#FFFFFF',
+    fontFamily: 'Quicksand-Medium',
     textAlign: 'center',
   },
 });

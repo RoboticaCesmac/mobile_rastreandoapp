@@ -1,4 +1,4 @@
-import { FontAwesome5 } from '@expo/vector-icons'; // Pacote de ícones
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { doc, updateDoc } from "firebase/firestore";
@@ -13,7 +13,7 @@ export default function PerfilIndividual() {
     const [fontsLoaded] = useFonts({
         'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
         'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
-      });
+    });
 
     const confirmarEscolha = async () => {
         if (escolha) {
@@ -60,15 +60,15 @@ export default function PerfilIndividual() {
                 <FontAwesome5 name="female" size={24} color="white" />
                 <Text style={styles.optionText}>MULHER</Text>
             </TouchableOpacity>
-            
-                <LottieView
-                    source={require('../../assets/lottie/escolha3.json')}
-                    autoPlay
-                    loop={true}
-                    speed={1.2}
-                    style={styles.lottie}
-                />
-            
+
+            <LottieView
+                source={require('../../assets/lottie/escolha3.json')}
+                autoPlay
+                loop={true}
+                speed={1.2}
+                style={styles.lottie}
+            />
+
             <TouchableOpacity
                 style={[styles.optionButton, escolha === 'homem' && styles.optionButtonSelected]}
                 onPress={() => setEscolha('homem')}>
@@ -107,6 +107,11 @@ const styles = StyleSheet.create({
         width: '80%',
         justifyContent: 'center',
         fontFamily: 'Quicksand-Bold',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
     },
     optionButtonSelected: {
         backgroundColor: '#ff5721',
@@ -123,6 +128,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         borderRadius: 25,
         marginTop: 40,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
     },
     confirmButtonText: {
         color: '#FFFFFF',
@@ -132,7 +142,7 @@ const styles = StyleSheet.create({
     lottie: {
         width: 300,
         height: 300,
-        marginBottom:-30,
-        marginTop:-30,
-      },
+        marginBottom: -30,
+        marginTop: -30,
+    },
 });

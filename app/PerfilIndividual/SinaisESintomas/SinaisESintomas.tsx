@@ -15,21 +15,19 @@ const SinaisESintomas: React.FC = () => {
         const sintomasAgrupados: { [key: string]: string[] } = {};
 
         if (sexo && neoplasia) {
-          const combinacao = `${sexo}_${neoplasia}`.toLowerCase(); // Convertemos para minúsculas
+          const combinacao = `${sexo}_${neoplasia}`.toLowerCase();
           console.log(`Buscando sintomas para combinação: ${combinacao}`);
 
-          // 1. Buscar IDs dos administradores
           const adminSnapshot = await getDocs(collection(db, 'administradores'));
           const adminIds = adminSnapshot.docs.map(doc => doc.id);
 
-          // 2. Para cada administrador, buscar os sinais e sintomas na subcoleção 'combinacoes'
           for (const adminId of adminIds) {
             console.log(`Verificando combinação para administrador: ${adminId}`);
             const combinacoesRef = collection(db, `sinaisSintomas/${adminId}/combinacoes`);
             const querySnapshot = await getDocs(combinacoesRef);
 
             querySnapshot.forEach((doc) => {
-              if (doc.id.toLowerCase() === combinacao) { // Garantimos que ambos estão em minúsculas
+              if (doc.id.toLowerCase() === combinacao) {
                 console.log(`Sintomas encontrados para ${combinacao}:`, doc.data().sintomas);
                 const data = doc.data();
                 if (sintomasAgrupados[combinacao]) {
@@ -41,10 +39,9 @@ const SinaisESintomas: React.FC = () => {
             });
           }
 
-          // 3. Convertendo o objeto agrupado em um array de combinações
           const allSintomasArray = Object.entries(sintomasAgrupados).map(([combinacao, sintomas]) => ({
             combinacao,
-            sintomas: Array.from(new Set(sintomas)), // Remover duplicatas de sintomas
+            sintomas: Array.from(new Set(sintomas)),
           }));
 
           console.log("Sintomas agrupados final:", allSintomasArray);
@@ -88,7 +85,6 @@ const SinaisESintomas: React.FC = () => {
         keyExtractor={(item, index) => `${item.combinacao}_${index}`}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text style={styles.itemText}>Combinação: {item.combinacao}</Text>
             <Text style={styles.sintomasText}>Sintomas: {item.sintomas.join(', ')}</Text>
           </View>
         )}
@@ -104,12 +100,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#232d97',
     paddingHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   title: {
     fontSize: 24,
     color: '#FFFFFF',
     marginBottom: 20,
     fontFamily: 'Quicksand-Bold',
+    textAlign: 'center',
+    marginTop: 30,
   },
   item: {
     backgroundColor: '#3949AB',
@@ -118,6 +121,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   itemText: {
     fontSize: 18,

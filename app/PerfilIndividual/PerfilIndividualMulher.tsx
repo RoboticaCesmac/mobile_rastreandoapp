@@ -14,7 +14,6 @@ export default function PerfilIndividualMulher() {
         'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
     });
 
-    // Animações de preenchimento para cada botão
     const fillAnim1 = useRef(new Animated.Value(0)).current;
     const fillAnim2 = useRef(new Animated.Value(0)).current;
     const fillAnim3 = useRef(new Animated.Value(0)).current;
@@ -25,7 +24,6 @@ export default function PerfilIndividualMulher() {
     const [actionCompleted3, setActionCompleted3] = useState(false);
     const [actionCompleted4, setActionCompleted4] = useState(false);
 
-    // Funções de preenchimento para cada botão
     const handlePressIn1 = () => {
         Animated.timing(fillAnim1, {
             toValue: 1,
@@ -138,7 +136,6 @@ export default function PerfilIndividualMulher() {
         };
     }, []);
 
-    // Interpolação de cores para cada botão
     const backgroundColorInterpolation1 = fillAnim1.interpolate({
         inputRange: [0, 1],
         outputRange: ['#3949AB', '#ff5721'],
@@ -172,7 +169,6 @@ export default function PerfilIndividualMulher() {
             <Text style={styles.subtitulo}>Segure para escolher</Text>
 
             <View style={styles.grid}>
-                {/* Botão 1 */}
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation1 }]}>
                     <TouchableOpacity
                         onPressIn={handlePressIn1}
@@ -185,7 +181,6 @@ export default function PerfilIndividualMulher() {
                     </TouchableOpacity>
                 </Animated.View>
 
-                {/* Botão 2 */}
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation2 }]}>
                     <TouchableOpacity
                         onPressIn={handlePressIn2}
@@ -198,7 +193,6 @@ export default function PerfilIndividualMulher() {
                     </TouchableOpacity>
                 </Animated.View>
 
-                {/* Botão 3 */}
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation3 }]}>
                     <TouchableOpacity
                         onPressIn={handlePressIn3}
@@ -211,7 +205,6 @@ export default function PerfilIndividualMulher() {
                     </TouchableOpacity>
                 </Animated.View>
 
-                {/* Botão 4 */}
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation4 }]}>
                     <TouchableOpacity
                         onPressIn={handlePressIn4}
@@ -238,8 +231,8 @@ export default function PerfilIndividualMulher() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center', // Centraliza o grid verticalmente
-        alignItems: 'center', // Centraliza o grid horizontalmente
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#232d97',
         paddingHorizontal: 30,
     },
@@ -267,26 +260,26 @@ const styles = StyleSheet.create({
         fontSize: 24,
         color: '#FFFFFF',
         fontFamily: 'Quicksand-Bold',
-        marginBottom: 20, // Espaçamento abaixo do título
+        marginBottom: 20,
     },
     subtitulo: {
         fontSize: 18,
         color: '#FFFFFF',
         fontFamily: 'Quicksand-Bold',
-        marginBottom: 20, // Espaçamento abaixo do título
+        marginBottom: 20,
     },
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-between', // Garante a distribuição uniforme dos botões
-        alignItems: 'center', // Centraliza verticalmente dentro do container
-        width: '80%', // Ajusta a largura do grid para centralização
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '80%',
         marginBottom: 160,
-        zIndex: 1, // Garante que o grid esteja à frente do Lottie
+        zIndex: 1,
     },
     squareButton: {
-        width: '45%', // 2 botões por linha
-        aspectRatio: 1, // Mantém o formato quadrado
+        width: '45%',
+        aspectRatio: 1,
         backgroundColor: '#3949AB',
         marginVertical: 10,
         justifyContent: 'center',
@@ -313,11 +306,11 @@ const styles = StyleSheet.create({
     },
     lottie: {
         position: 'absolute',
-        bottom: 0, // Fixar na base
-        width: 900, // Ocupa 100% da largura
-        height: 276, // Altura da animação, ajustável conforme necessário
+        bottom: 0,
+        width: 900,
+        height: 276,
         marginBottom: -20,
         left: -255,
-        zIndex: 0, // Garante que o grid esteja à frente do Lottie
+        zIndex: 0,
     },
 });

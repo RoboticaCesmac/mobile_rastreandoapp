@@ -79,7 +79,7 @@ export default function TelaDeHomeUsuario() {
         Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
       });
   };
-  
+
   const handleBack = () => {
     router.back();
   };

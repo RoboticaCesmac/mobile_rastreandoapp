@@ -1,44 +1,41 @@
 import { useLocalSearchParams } from 'expo-router';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore'; // Adicionar 'doc' e 'getDoc'
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { db } from '../../../config/firebase-config';
 
 const IndicacoesRastreio: React.FC = () => {
-    const { sexo, neoplasia } = useLocalSearchParams(); // Pegando os parâmetros passados
+    const { sexo, neoplasia } = useLocalSearchParams();
     const [texto, setTexto] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchIndicacoes = async () => {
             try {
-                // 1. Buscar IDs dos administradores
                 const adminSnapshot = await getDocs(collection(db, 'administradores'));
-                const adminIds = adminSnapshot.docs.map(doc => doc.id); // Extrair os IDs dos administradores
+                const adminIds = adminSnapshot.docs.map(doc => doc.id);
 
-                console.log('IDs dos administradores:', adminIds); // Log para verificar IDs dos administradores
+                console.log('IDs dos administradores:', adminIds);
 
                 let indicacoesEncontradas = false;
 
-                // 2. Garantir que 'sexo' e 'neoplasia' são strings antes de usá-los
                 const sexoStr = Array.isArray(sexo) ? sexo[0] : sexo;
                 const neoplasiaStr = Array.isArray(neoplasia) ? neoplasia[0] : neoplasia;
 
-                // 3. Para cada administrador, buscar o documento que combina com {IDdoAdm}_{sexo}_{neoplasia}
                 for (const adminId of adminIds) {
                     const documentId = `${adminId}_${sexoStr?.toLowerCase()}_${neoplasiaStr?.toLowerCase()}`;
-                    console.log('Tentando buscar documento com ID:', documentId); // Log para verificar o ID do documento gerado
+                    console.log('Tentando buscar documento com ID:', documentId);
 
-                    const docRef = doc(db, 'indicacoesRastreio', documentId); // Busca o documento diretamente com o ID composto
+                    const docRef = doc(db, 'indicacoesRastreio', documentId);
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
-                        console.log('Documento encontrado:', docSnap.data()); // Log para exibir os dados encontrados
-                        setTexto(docSnap.data().texto); // Definir o texto da indicação
+                        console.log('Documento encontrado:', docSnap.data());
+                        setTexto(docSnap.data().texto);
                         indicacoesEncontradas = true;
-                        break; // Parar a busca se encontrar a indicação
+                        break;
                     } else {
-                        console.log('Nenhum documento encontrado para o ID:', documentId); // Log para verificar se não encontrou
+                        console.log('Nenhum documento encontrado para o ID:', documentId);
                     }
                 }
 
@@ -54,7 +51,7 @@ const IndicacoesRastreio: React.FC = () => {
         };
 
         if (sexo && neoplasia) {
-            console.log('Parâmetros recebidos - Sexo:', sexo, 'Neoplasia:', neoplasia); // Log para verificar os parâmetros recebidos
+            console.log('Parâmetros recebidos - Sexo:', sexo, 'Neoplasia:', neoplasia);
             fetchIndicacoes();
         } else {
             console.error('Dados de sexo ou neoplasia ausentes.');
@@ -95,6 +92,17 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         marginBottom: 20,
         fontFamily: 'Quicksand-Bold',
+        backgroundColor: '#ff5721',
+        borderRadius: 50,
+        paddingHorizontal: 20,
+        textAlign: 'center',
+        lineHeight: 50,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 30,
+        elevation: 10,
+        marginTop: 30,
     },
     indicacaoText: {
         fontSize: 18,

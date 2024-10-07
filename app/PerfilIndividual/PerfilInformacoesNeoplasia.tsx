@@ -155,45 +155,45 @@ export default function PerfilInformacoesNeoplasia() {
 
     const redirecionarParaSinaisESintomas = async () => {
         const user = authInstance.currentUser;
-      
+
         if (user) {
-          const userDocRef = doc(firestore, 'usuarios', user.uid);
-          const userDoc = await getDoc(userDocRef);
-      
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            const genero = userData.genero;
-      
-            // Verifique se tanto o gênero quanto a neoplasia estão disponíveis
-            if (genero && neoplasia) {
-              // Redireciona para a página SinaisESintomas com os parâmetros corretos
-              router.push({
-                pathname: `/PerfilIndividual/SinaisESintomas/SinaisESintomas`, 
-                params: { sexo: genero, neoplasia }, // Passando parâmetros
-              });
+            const userDocRef = doc(firestore, 'usuarios', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const genero = userData.genero;
+
+
+                if (genero && neoplasia) {
+
+                    router.push({
+                        pathname: `/PerfilIndividual/SinaisESintomas/SinaisESintomas`,
+                        params: { sexo: genero, neoplasia },
+                    });
+                } else {
+                    console.error('Dados de gênero ou neoplasia ausentes');
+                }
             } else {
-              console.error('Dados de gênero ou neoplasia ausentes');
+                console.error('Documento do usuário não encontrado');
             }
-          } else {
-            console.error('Documento do usuário não encontrado');
-          }
         } else {
-          console.error('Usuário não está logado');
+            console.error('Usuário não está logado');
         }
-      };
-      
-    
+    };
+
+
 
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
             <LottieView
-        source={require('../../assets/lottie/lupa2.json')}
-        autoPlay
-        loop={false} // Não repetir a animação
-        speed={3} // Controlando a velocidade, 0.5 para metade da velocidade normal
-        style={styles.lottie}
-      />
+                source={require('../../assets/lottie/lupa2.json')}
+                autoPlay
+                loop={false}
+                speed={3}
+                style={styles.lottie}
+            />
             <Text style={styles.title}>{title}</Text>
             <TouchableOpacity
                 style={styles.button}
@@ -248,11 +248,10 @@ const styles = StyleSheet.create({
         width: '80%',
         alignItems: 'center',
         shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    // Propriedade de sombra para Android
-    elevation: 5,      
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 30,
+        elevation: 10,
     },
     buttonText: {
         color: '#FFFFFF',
@@ -263,5 +262,5 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         alignSelf: 'center',
-      },
+    },
 });

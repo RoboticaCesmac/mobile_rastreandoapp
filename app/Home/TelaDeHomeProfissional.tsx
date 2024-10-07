@@ -25,7 +25,7 @@ export default function TelaDeHomeProfissional() {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
-  
+
   useEffect(() => {
     const fetchUserName = async () => {
       const user = auth.currentUser;

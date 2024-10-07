@@ -11,7 +11,7 @@ export default function PerfilIndividualHomem() {
     const [fontsLoaded] = useFonts({
         'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
         'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
-      });
+    });
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -110,6 +110,11 @@ const styles = StyleSheet.create({
         width: '80%',
         justifyContent: 'center',
         fontFamily: 'Quicksand-Bold',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
     },
     buttonText: {
         color: '#FFFFFF',

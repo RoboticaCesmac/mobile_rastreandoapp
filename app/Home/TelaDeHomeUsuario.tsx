@@ -19,7 +19,7 @@ export default function TelaDeHomeUsuario() {
 
   useFocusEffect(
     useCallback(() => {
-      const onBackPress = () => true; // Bloqueia o botão voltar
+      const onBackPress = () => true;
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
@@ -34,7 +34,7 @@ export default function TelaDeHomeUsuario() {
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setUserName(userData.nome);
-          setUserSexo(userData.genero); // Armazena o sexo do usuário
+          setUserSexo(userData.genero);
         }
       }
     };
@@ -65,7 +65,7 @@ export default function TelaDeHomeUsuario() {
     if (userSexo) {
       router.push({
         pathname: '/MarcarConsulta/MarcarConsulta',
-        params: { sexo: userSexo }, // Passa o sexo como parâmetro
+        params: { sexo: userSexo },
       });
     } else {
       Alert.alert('Erro', 'Sexo do usuário não encontrado.');
@@ -110,67 +110,67 @@ export default function TelaDeHomeUsuario() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#1A237E',
-    },
-    logo: {
-      width: 150,
-      height: 150,
-      marginBottom: 30,
-    },
-    button: {
-      backgroundColor: '#3949AB',
-      paddingVertical: 15,
-      paddingHorizontal: 40,
-      borderRadius: 25,
-      marginVertical: 10,
-      width: '80%',
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 1,
-      shadowRadius: 8,
-      elevation: 5,
-    },
-    buttonText: {
-      color: '#FFFFFF',
-      fontSize: 18,
-      fontFamily: 'Quicksand-Bold',
-    },
-    logoutButton: {
-      flexDirection: 'row',
-      backgroundColor: '#D32F2F',
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 25,
-      marginTop: 20,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 1,
-      shadowRadius: 8,
-      elevation: 5,
-    },
-    logoutButtonText: {
-      color: '#FFFFFF',
-      fontSize: 18,
-      marginLeft: 10,
-      fontFamily: 'Quicksand-Bold',
-    },
-    lottie: {
-      width: 400,
-      height: 400,
-      marginBottom: -80,
-      marginTop: -100,
-    },
-    welcomeText: {
-      color: '#FFFFFF',
-      fontSize: 38,
-      fontFamily: 'Quicksand-Bold',
-      marginVertical: 20,
-      textAlign: 'center',
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1A237E',
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 30,
+  },
+  button: {
+    backgroundColor: '#3949AB',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginVertical: 10,
+    width: '80%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontFamily: 'Quicksand-Bold',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    backgroundColor: '#D32F2F',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginTop: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  logoutButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    marginLeft: 10,
+    fontFamily: 'Quicksand-Bold',
+  },
+  lottie: {
+    width: 400,
+    height: 400,
+    marginBottom: -80,
+    marginTop: -100,
+  },
+  welcomeText: {
+    color: '#FFFFFF',
+    fontSize: 38,
+    fontFamily: 'Quicksand-Bold',
+    marginVertical: 20,
+    textAlign: 'center',
+  },
 });

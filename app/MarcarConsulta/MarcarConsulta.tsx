@@ -10,48 +10,43 @@ const MarcarConsulta: React.FC = () => {
   useEffect(() => {
     const fetchLocais = async () => {
       try {
-        // 1. Buscar IDs dos administradores
         const adminSnapshot = await getDocs(collection(db, 'administradores'));
-        const adminIds = adminSnapshot.docs.map((doc) => doc.id); // Extrair os IDs dos administradores
-        console.log('IDs dos administradores:', adminIds); // Verificar se IDs estão corretos
+        const adminIds = adminSnapshot.docs.map((doc) => doc.id);
+        console.log('IDs dos administradores:', adminIds);
 
         const allLocaisArray: any[] = [];
 
-        // 2. Para cada administrador, buscar o array de locais tanto para 'homem' quanto para 'mulher'
         for (const adminId of adminIds) {
-          // Buscar locais para homens
           const docHomemRef = doc(db, `marqueConsulta/${adminId}_homem`);
           const docHomemSnap = await getDoc(docHomemRef);
           if (docHomemSnap.exists()) {
             const data = docHomemSnap.data();
             if (data.locais && Array.isArray(data.locais)) {
               console.log(`Locais encontrados para homem (adminId: ${adminId}):`, data.locais);
-              allLocaisArray.push(...data.locais); // Adiciona os locais ao array
+              allLocaisArray.push(...data.locais);
             } else {
               console.log(`Nenhum array de locais encontrado para marqueConsulta/${adminId}_homem`);
             }
           }
 
-          // Buscar locais para mulheres
           const docMulherRef = doc(db, `marqueConsulta/${adminId}_mulher`);
           const docMulherSnap = await getDoc(docMulherRef);
           if (docMulherSnap.exists()) {
             const data = docMulherSnap.data();
             if (data.locais && Array.isArray(data.locais)) {
               console.log(`Locais encontrados para mulher (adminId: ${adminId}):`, data.locais);
-              allLocaisArray.push(...data.locais); // Adiciona os locais ao array
+              allLocaisArray.push(...data.locais);
             } else {
               console.log(`Nenhum array de locais encontrado para marqueConsulta/${adminId}_mulher`);
             }
           }
         }
 
-        console.log('Todos os locais encontrados:', allLocaisArray); // Log dos dados acumulados no array de locais
-        // 3. Atualizar o estado com todos os locais de consulta
+        console.log('Todos os locais encontrados:', allLocaisArray);
         setLocais(allLocaisArray);
         setLoading(false);
       } catch (error) {
-        console.error('Erro ao buscar locais de consulta:', error); // Log do erro
+        console.error('Erro ao buscar locais de consulta:', error);
         setLoading(false);
       }
     };
@@ -73,7 +68,7 @@ const MarcarConsulta: React.FC = () => {
       <Text style={styles.title}>Locais para Marcar Consulta</Text>
       <FlatList
         data={locais}
-        keyExtractor={(item, index) => index.toString()} // Usar índice como chave única
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text style={styles.nome}>{item.nome}</Text>
@@ -83,6 +78,7 @@ const MarcarConsulta: React.FC = () => {
             <Text style={styles.telefone}>Telefone: {item.telefone}</Text>
           </View>
         )}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -95,12 +91,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#232d97',
     paddingHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   title: {
     fontSize: 24,
     color: '#FFFFFF',
     marginBottom: 20,
     fontFamily: 'Quicksand-Bold',
+    textAlign: 'center',
+    marginTop: 30,
   },
   item: {
     backgroundColor: '#3949AB',
@@ -109,6 +112,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   nome: {
     fontSize: 18,
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: 16,
-    color: '#FFD700', // Cor para diferenciar o link
+    color: '#FFD700',
     textDecorationLine: 'underline',
     marginBottom: 5,
   },

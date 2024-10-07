@@ -83,9 +83,9 @@ export default function TelaCadastro() {
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <StatusBar hidden={true} />
         <TouchableOpacity style={styles.titleDiv}>
-            <Text style={styles.title}>Cadastre-se</Text>
-          </TouchableOpacity>
-          
+          <Text style={styles.title}>Cadastre-se</Text>
+        </TouchableOpacity>
+
         <TextInput
           style={styles.input}
           placeholder="Nome"

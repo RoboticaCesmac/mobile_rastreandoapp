@@ -2,7 +2,7 @@ import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import LottieView from 'lottie-react-native'; // Importando o componente LottieView
+import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, BackHandler, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../../config/firebase-config';
@@ -12,7 +12,7 @@ export default function TelaLogin() {
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const lottieRef = useRef<LottieView>(null); // Definir o tipo de ref para LottieView
+  const lottieRef = useRef<LottieView>(null);
   const [fontsLoaded] = useFonts({
     'Quicksand-Medium': require('../../assets/fonts/Quicksand-Medium.ttf'),
     'Quicksand-Bold': require('../../assets/fonts/Quicksand-Bold.ttf'),
@@ -70,19 +70,14 @@ export default function TelaLogin() {
     <View style={styles.container}>
       <StatusBar hidden={true} />
 
-      {/* Animação Lottie no topo da página */}
       <View style={styles.lottieContainer}>
         <LottieView
           ref={lottieRef}
-          source={require('../../assets/lottie/LOGIN.json')} // Importando o arquivo JSON da animação
+          source={require('../../assets/lottie/LOGIN.json')}
           autoPlay
-          loop={false} // Não repetir a animação
-          speed={0.5} // Controlando a velocidade, 0.5 para metade da velocidade normal
-          onAnimationFinish={() => {
-            if (lottieRef.current) {
-              lottieRef.current.pause();
-            }
-          }}
+          loop={false}
+          speed={0.5}
+          onAnimationFinish={() => { }}
           style={styles.lottie}
         />
 
@@ -122,7 +117,7 @@ export default function TelaLogin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Alterado para começar do topo
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#232d97',
   },
@@ -137,11 +132,12 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
     fontSize: 18,
     marginVertical: 10,
     fontFamily: 'Quicksand-Bold',
-    textAlign: 'center',
+    textAlign: 'left',
+    marginHorizontal: 10,
   },
   button: {
     backgroundColor: '#ff5721',
@@ -192,7 +188,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   lottie: {
-    width: Dimensions.get('window').width, // Largura total da tela
-    height: 200, // Altura da animação, ajuste conforme necessário
+    width: Dimensions.get('window').width,
+    height: 200,
   },
 });

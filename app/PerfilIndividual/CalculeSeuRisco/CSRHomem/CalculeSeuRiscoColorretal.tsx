@@ -180,6 +180,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#3949AB',
     padding: 10,
     borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   checkbox: {
     width: 24,
@@ -212,6 +217,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: '80%',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   buttonText: {
     color: '#FFFFFF',

@@ -2,26 +2,24 @@ import { useLocalSearchParams } from 'expo-router';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { db } from '../../../config/firebase-config'; // Certifique-se de que o caminho para seu arquivo firebase está correto
+import { db } from '../../../config/firebase-config';
 
 const CondutaManejoResultados: React.FC = () => {
-  const { sexo, neoplasia } = useLocalSearchParams(); // Recebendo os parâmetros dinâmicos de sexo e neoplasia
+  const { sexo, neoplasia } = useLocalSearchParams();
   const [condutas, setCondutas] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchCondutas = async () => {
       try {
-        const combinacao = `${sexo}_${neoplasia}`.toLowerCase(); // Converter para minúsculas
+        const combinacao = `${sexo}_${neoplasia}`.toLowerCase();
         console.log(`Buscando condutas para a combinação: ${combinacao}`);
 
-        const condutasAgrupadas: { [key: string]: any[] } = {}; // Objeto para agrupar condutas por combinação
+        const condutasAgrupadas: { [key: string]: any[] } = {};
 
-        // 1. Buscar IDs dos administradores
         const adminSnapshot = await getDocs(collection(db, 'administradores'));
-        const adminIds = adminSnapshot.docs.map(doc => doc.id); // Extrair os IDs dos administradores
+        const adminIds = adminSnapshot.docs.map(doc => doc.id);
 
-        // 2. Para cada administrador, buscar as condutas de manejo na subcoleção 'combinacoes'
         for (const adminId of adminIds) {
           console.log(`Verificando dados para administrador: ${adminId}`);
           const combinacoesRef = collection(db, `condutaManejoResultado/${adminId}/combinacoes`);
@@ -33,20 +31,17 @@ const CondutaManejoResultados: React.FC = () => {
               console.log(`Dados encontrados para combinação: ${combinacao}`);
               const data = doc.data();
               if (condutasAgrupadas[docId]) {
-                // Se já existe a combinação, concatenar as novas condutas e remover duplicatas
                 const novasCondutas = data.itens.filter((item: any) =>
                   !condutasAgrupadas[docId].some((existingItem: any) => JSON.stringify(existingItem) === JSON.stringify(item))
                 );
                 condutasAgrupadas[docId] = [...condutasAgrupadas[docId], ...novasCondutas];
               } else {
-                // Criar nova combinação com os itens
                 condutasAgrupadas[docId] = data.itens || [];
               }
             }
           });
         }
 
-        // 3. Converter o objeto agrupado em um array
         const condutasArray = Object.entries(condutasAgrupadas).map(([combinacao, itens]) => ({
           combinacao,
           itens,
@@ -79,7 +74,7 @@ const CondutaManejoResultados: React.FC = () => {
       <Text style={styles.title}>Conduta e Manejo</Text>
       <FlatList
         data={condutas}
-        keyExtractor={(item) => item.combinacao} // Usando a combinação como chave única
+        keyExtractor={(item) => item.combinacao}
         renderItem={({ item }) => (
           <View>
             {item.itens.map((conduta: any, index: number) => (
@@ -100,28 +95,44 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#232d97',  // Mesma cor de fundo
+    backgroundColor: '#232d97',
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
-    color: '#FFFFFF',  // Cor branca como no título anterior
+    color: '#FFFFFF',
     marginBottom: 20,
-    fontFamily: 'Quicksand-Bold',  // Fonte personalizada
-  },
+    fontFamily: 'Quicksand-Bold',
+    backgroundColor: '#ff5721',
+    borderRadius: 50,
+    paddingHorizontal: 20,
+    textAlign: 'center',
+    lineHeight: 50,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
+    marginTop: 30,
+},
   item: {
-    backgroundColor: '#3949AB',  // Mesma cor dos botões
+    backgroundColor: '#3949AB',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
-    alignItems: 'center',  // Centralizando o conteúdo
+    alignItems: 'center',
+    shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 30,
+        elevation: 10,
   },
   description: {
     fontSize: 16,
-    color: '#FFFFFF',  // Texto em branco para a descrição
-    fontFamily: 'Quicksand-Medium',  // Fonte personalizada
+    color: '#FFFFFF',
+    fontFamily: 'Quicksand-Medium',
     textAlign: 'center',
   },
 });

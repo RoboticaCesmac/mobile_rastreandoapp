@@ -1,4 +1,4 @@
-import { FontAwesome5 } from '@expo/vector-icons'; // Importando ícone de laço
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
@@ -25,11 +25,11 @@ export default function PaginaInicial() {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      
+
       <View style={styles.titleContainer}>
         <Text style={styles.titleRastreando}>RASTREANDO</Text>
       </View>
-      <FontAwesome5 name="ribbon" size={40} color="#FFFFFF"/>
+      <FontAwesome5 name="ribbon" size={40} color="#FFFFFF" />
       <Text style={styles.subtitle}>APP</Text>
       <View style={styles.subcontainer}>
         <LottieView
@@ -41,13 +41,13 @@ export default function PaginaInicial() {
         />
         <Text style={styles.title}>Bem-vindo(a)!</Text>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/Login/TelaLogin')}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/Login/TelaLogin')}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/Cadastro/TelaCadastro')}>
-            <Text style={styles.buttonText}>Cadastre-se</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/Cadastro/TelaCadastro')}>
+          <Text style={styles.buttonText}>Cadastre-se</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -61,9 +61,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#232d97',
   },
   titleContainer: {
-    flexDirection: 'row', // Alinha o texto e o ícone em uma linha
-    alignItems: 'center', // Centraliza verticalmente o conteúdo
-    marginBottom: 10, // Adiciona um espaço abaixo
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   subcontainer: {
     justifyContent: 'center',

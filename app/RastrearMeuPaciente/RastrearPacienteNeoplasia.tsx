@@ -10,7 +10,7 @@ const firestore = getFirestore();
 
 export default function RastrearPacienteNeoplasia() {
     const router = useRouter();
-    const { neoplasia } = useLocalSearchParams(); // Pegando o parâmetro 'neoplasia' da URL
+    const { neoplasia } = useLocalSearchParams();
     const [title, setTitle] = useState<string>('');
 
     const [fontsLoaded] = useFonts({
@@ -33,7 +33,7 @@ export default function RastrearPacienteNeoplasia() {
     }, [neoplasia]);
 
     if (!fontsLoaded) {
-        return null; // Retorna nada enquanto as fontes não carregarem
+        return null;
     }
 
     const redirecionarParaSinaisAlarmeFatoresRisco = async () => {
@@ -47,11 +47,10 @@ export default function RastrearPacienteNeoplasia() {
                 const userData = userDoc.data();
                 const genero = userData.genero;
 
-                // Redirecionar para a página de SinaisAlarmeFatoresRisco com os parâmetros corretos
                 if (genero && neoplasia) {
                     router.push({
                         pathname: `/RastrearMeuPaciente/SinaisAlarmeFatoresRisco/SinaisAlarmeFatoresRisco`,
-                        params: { sexo: genero, neoplasia }, // Passa os parâmetros dinâmicos
+                        params: { sexo: genero, neoplasia },
                     });
                 } else {
                     console.error('Dados de gênero ou neoplasia ausentes');
@@ -75,11 +74,10 @@ export default function RastrearPacienteNeoplasia() {
                 const userData = userDoc.data();
                 const genero = userData.genero;
 
-                // Redirecionar para a página de Indicações de Rastreio com os parâmetros corretos
                 if (genero && neoplasia) {
                     router.push({
                         pathname: `/RastrearMeuPaciente/IndicacoesRastreio/IndicacoesRastreio`,
-                        params: { sexo: genero, neoplasia }, // Passa os parâmetros dinâmicos
+                        params: { sexo: genero, neoplasia },
                     });
                 } else {
                     console.error('Dados de gênero ou neoplasia ausentes');
@@ -91,7 +89,7 @@ export default function RastrearPacienteNeoplasia() {
             console.error('Usuário não está logado');
         }
     };
-    
+
     const redirecionarParaCondutaManejoResultados = async () => {
         const user = auth.currentUser;
 
@@ -103,11 +101,10 @@ export default function RastrearPacienteNeoplasia() {
                 const userData = userDoc.data();
                 const genero = userData.genero;
 
-                // Redirecionar para a página de Indicações de Rastreio com os parâmetros corretos
                 if (genero && neoplasia) {
                     router.push({
                         pathname: `/RastrearMeuPaciente/CondutaManejoResultados/CondutaManejoResultados`,
-                        params: { sexo: genero, neoplasia }, // Passa os parâmetros dinâmicos
+                        params: { sexo: genero, neoplasia },
                     });
                 } else {
                     console.error('Dados de gênero ou neoplasia ausentes');
@@ -134,9 +131,9 @@ export default function RastrearPacienteNeoplasia() {
                 onPress={redirecionarParaIndicacoesRastreio}>
                 <Text style={styles.buttonText}>Indicações de Rastreio</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-            style={styles.button}
-            onPress={redirecionarParaCondutaManejoResultados}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={redirecionarParaCondutaManejoResultados}>
                 <Text style={styles.buttonText}>Conduta e Manejo Após Resultados</Text>
             </TouchableOpacity>
         </View>
@@ -148,29 +145,44 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#232d97',  // Cor de fundo padronizada
+        backgroundColor: '#232d97',
         paddingHorizontal: 30,
     },
     title: {
         fontSize: 24,
         color: '#FFFFFF',
         marginBottom: 20,
-        fontFamily: 'Quicksand-Bold',  // Fonte personalizada
+        fontFamily: 'Quicksand-Bold',
+        backgroundColor: '#ff5721',
+        borderRadius: 50,
+        paddingHorizontal: 20,
+        textAlign: 'center',
+        lineHeight: 50,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 30,
+        elevation: 10,
     },
     button: {
-        backgroundColor: '#3949AB',  // Mesma cor dos botões quadrados
+        backgroundColor: '#3949AB',
         paddingVertical: 15,
         paddingHorizontal: 30,
-        borderRadius: 20,  // Bordas arredondadas como os botões quadrados
+        borderRadius: 20,
         marginVertical: 10,
         width: '80%',
         alignItems: 'center',
-        fontFamily: 'Quicksand-Bold',  // Fonte personalizada
+        fontFamily: 'Quicksand-Bold',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 30,
+        elevation: 10,
     },
     buttonText: {
         color: '#FFFFFF',
         fontSize: 18,
-        fontFamily: 'Quicksand-Bold',  // Fonte personalizada
+        fontFamily: 'Quicksand-Bold',
         textAlign: 'center',
     },
 });
