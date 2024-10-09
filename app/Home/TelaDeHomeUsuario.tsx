@@ -88,7 +88,7 @@ export default function TelaDeHomeUsuario() {
         source={require('../../assets/lottie/logo.json')}
         autoPlay
         loop={true}
-        speed={0.7}
+        speed={0.8}
         style={styles.lottie}
       />
       {userName ? <Text style={styles.welcomeText}>Bem vindo(a), {userName}</Text> : null}

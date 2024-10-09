@@ -1,10 +1,9 @@
-// Import the functions you need from the SDKs you needrr
+// Import the functions you need from the SDKs you need
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from "firebase/app";
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBu4VwzbBEdwxyjQG22ZNDEWv_jHtkmRH4",
   authDomain: "rastreando-app.firebaseapp.com",
@@ -15,15 +14,14 @@ const firebaseConfig = {
   measurementId: "G-88P95B1R5M"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Auth with persistence
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 
-// Initialize Firestore
+auth.languageCode = 'pt';
+
 const db = getFirestore(app);
 
 export { auth, db };

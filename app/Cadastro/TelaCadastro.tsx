@@ -1,7 +1,7 @@
 import * as EmailValidator from 'email-validator';
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from 'react';
 import {
@@ -20,12 +20,57 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import { auth, db } from '../../config/firebase-config';
 
+
+const isValidCPF = (cpf: string) => {
+  cpf = cpf.replace(/[^\d]+/g, '');
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++) {
+    soma += parseInt(cpf.charAt(i)) * (10 - i);
+  }
+  let resto = 11 - (soma % 11);
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(9))) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++) {
+    soma += parseInt(cpf.charAt(i)) * (11 - i);
+  }
+  resto = 11 - (soma % 11);
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(10))) return false;
+
+  return true;
+};
+
+const isValidDate = (date: string): boolean => {
+  const [day, month, year] = date.split('/').map(Number);
+
+  if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+
+  if (month < 1 || month > 12) return false;
+
+  const daysInMonth = new Date(year, month, 0).getDate();
+  if (day < 1 || day > daysInMonth) return false;
+
+  const today = new Date();
+  const parsedDate = new Date(year, month - 1, day);
+  if (parsedDate >= today) return false;
+
+  return true;
+};
+
+
+
+
 export default function TelaCadastro() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
   const [loading, setLoading] = useState(false);
   const [fontsLoaded] = useFonts({
@@ -36,7 +81,7 @@ export default function TelaCadastro() {
   const router = useRouter();
 
   const handleCadastro = () => {
-    if (!nome || !email || !cpf || !dataNascimento || !senha || !tipoUsuario) {
+    if (!nome || !email || !cpf || !dataNascimento || !senha || !confirmarSenha || !tipoUsuario) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -46,8 +91,23 @@ export default function TelaCadastro() {
       return;
     }
 
+    if (!isValidCPF(cpf)) {
+      Alert.alert('Erro', 'Por favor, insira um CPF válido.');
+      return;
+    }
+
+    if (!isValidDate(dataNascimento)) {
+      Alert.alert('Erro', 'Por favor, insira uma data de nascimento válida.');
+      return;
+    }
+
     if (senha.length < 6) {
       Alert.alert('Erro', 'A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
 
@@ -65,8 +125,10 @@ export default function TelaCadastro() {
           tipoUsuario,
         });
 
+        await sendEmailVerification(user);
+
         setLoading(false);
-        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso! Verifique seu email.');
         router.push('/paginaInicial');
       })
       .catch((error) => {
@@ -122,6 +184,13 @@ export default function TelaCadastro() {
           secureTextEntry
           value={senha}
           onChangeText={setSenha}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirmar Senha"
+          secureTextEntry
+          value={confirmarSenha}
+          onChangeText={setConfirmarSenha}
         />
 
         <View style={styles.buttonContainer}>
@@ -216,7 +285,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Quicksand-Medium',
     alignItems: 'center',
-
   },
   tipoButtonTextSelected: {
     fontFamily: 'Quicksand-Bold',

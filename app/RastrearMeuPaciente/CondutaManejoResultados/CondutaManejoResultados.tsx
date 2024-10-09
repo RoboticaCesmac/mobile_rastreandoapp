@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     shadowRadius: 30,
     elevation: 10,
     marginTop: 30,
-},
+  },
   item: {
     backgroundColor: '#3949AB',
     paddingVertical: 15,
@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     shadowColor: '#000',
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 1,
-        shadowRadius: 30,
-        elevation: 10,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
   },
   description: {
     fontSize: 16,
