@@ -41,6 +41,17 @@ export default function SeusExamesDeRastreioMamaFeminino() {
     };
 
     const handleDateConfirm = (date: Date) => {
+        const today = new Date();
+
+        if (date > today) {
+            Alert.alert(
+                'Data Inválida',
+                'Você não pode registrar uma data futura para o exame.',
+                [{ text: 'OK', onPress: hideDatePicker }]
+            );
+            return;
+        }
+
         if (exameSelecionado) {
             Alert.alert(
                 'Resultado do Exame',

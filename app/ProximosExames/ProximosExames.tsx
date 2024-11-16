@@ -1,6 +1,7 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { MaterialIcons } from '@expo/vector-icons'; // Certifique-se de instalar @expo/vector-icons
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../../config/firebase-config';
 
 export default function ProximosExames() {
@@ -16,10 +17,8 @@ export default function ProximosExames() {
 
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
-                        console.log('Dados do usuário:', userData); // Log para verificar os dados do Firebase
                         const exames = [];
 
-                        // Ajustando os campos de acordo com os nomes corretos
                         if (userData.proximoExamePulmao) {
                             exames.push({
                                 exame: 'Tomografia Computadorizada (Pulmão)',
@@ -48,16 +47,11 @@ export default function ProximosExames() {
                             });
                         }
 
-                        console.log('Próximos Exames:', exames); // Log para depuração
                         setProximosExames(exames);
-                    } else {
-                        console.log('Documento do usuário não encontrado.');
                     }
                 } catch (error) {
                     console.error('Erro ao buscar exames:', error);
                 }
-            } else {
-                console.log('Usuário não autenticado.');
             }
         };
 
@@ -72,6 +66,50 @@ export default function ProximosExames() {
         return `${day}/${month}/${year}`;
     };
 
+    const excluirExame = async (index: number) => {
+        if (!user) return;
+
+        const exameRemovido = proximosExames[index];
+        const novosExames = proximosExames.filter((_, i) => i !== index);
+
+        try {
+            const userDocRef = doc(db, 'usuarios', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const updates: any = {};
+
+                if (exameRemovido.exame.includes('Pulmão')) {
+                    updates.proximoExamePulmao = null;
+                } else if (exameRemovido.exame.includes('Colorretal')) {
+                    updates.proximoExameColorretal = null;
+                } else if (exameRemovido.exame.includes('Mama')) {
+                    updates.proximoExameMama = null;
+                } else if (exameRemovido.exame.includes('Colo de Útero')) {
+                    updates.proximoExameColoDeUtero = null;
+                }
+
+                await updateDoc(userDocRef, updates);
+                setProximosExames(novosExames);
+                Alert.alert('Sucesso', 'Exame excluído com sucesso.');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir exame:', error);
+            Alert.alert('Erro', 'Não foi possível excluir o exame. Tente novamente.');
+        }
+    };
+
+    const confirmarExclusao = (index: number) => {
+        Alert.alert(
+            'Excluir Exame',
+            'Tem certeza que deseja excluir este exame?',
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                { text: 'Excluir', style: 'destructive', onPress: () => excluirExame(index) },
+            ]
+        );
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
@@ -81,10 +119,18 @@ export default function ProximosExames() {
             <FlatList
                 data={proximosExames}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <View style={styles.itemContainer}>
-                        <Text style={styles.itemTitle}>{item.exame}</Text>
-                        <Text style={styles.itemDate}>{formatDate(item.date)}</Text>
+                        <View style={styles.itemTextContainer}>
+                            <Text style={styles.itemTitle}>{item.exame}</Text>
+                            <Text style={styles.itemDate}>{formatDate(item.date)}</Text>
+                        </View>
+                        <TouchableOpacity
+                            style={styles.deleteButton}
+                            onPress={() => confirmarExclusao(index)}
+                        >
+                            <MaterialIcons name="delete" size={24} color="#FFFFFF" />
+                        </TouchableOpacity>
                     </View>
                 )}
                 ListEmptyComponent={<Text style={styles.emptyText}>Nenhum próximo exame agendado.</Text>}
@@ -107,6 +153,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     itemContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: '#3949AB',
         padding: 15,
         borderRadius: 10,
@@ -116,6 +165,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 5,
         elevation: 5,
+    },
+    itemTextContainer: {
+        flex: 1,
     },
     itemTitle: {
         color: '#FFFFFF',
@@ -127,6 +179,14 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 16,
         fontFamily: 'Quicksand-Medium',
+    },
+    deleteButton: {
+        backgroundColor: '#FF5252',
+        padding: 10,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
     },
     emptyText: {
         color: '#FFFFFF',

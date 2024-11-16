@@ -41,6 +41,17 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
     };
 
     const handleDateConfirm = (date: Date) => {
+        const today = new Date();
+
+        if (date > today) {
+            Alert.alert(
+                'Data Inválida',
+                'Você não pode registrar uma data futura para o exame.',
+                [{ text: 'OK', onPress: hideDatePicker }]
+            );
+            return;
+        }
+
         if (exameSelecionado) {
             Alert.alert(
                 'Resultado do Exame',
@@ -112,7 +123,7 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
                 <Text style={styles.sectionTitle}>Próximos Exames</Text>
                 <Text style={styles.nextExamText}>
                     {proximoExame
-                        ? `Colonoscopia com 45 anos - ${formatDate(proximoExame)}`
+                        ? `Colonoscopia - ${formatDate(proximoExame)}`
                         : 'Nenhuma data marcada'}
                 </Text>
             </View>
@@ -125,12 +136,12 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
                         <TouchableOpacity
                             style={styles.modalButton}
                             onPress={() => {
-                                setExameSelecionado('Colonoscopia com 45 anos');
+                                setExameSelecionado('Colonoscopia');
                                 showDatePicker();
                                 closeModal();
                             }}
                         >
-                            <Text style={styles.modalButtonText}>Colonoscopia com 45 anos</Text>
+                            <Text style={styles.modalButtonText}>Colonoscopia</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.modalCancelButton} onPress={closeModal}>
                             <Text style={styles.modalCancelButtonText}>Cancelar</Text>
