@@ -19,7 +19,7 @@ export default function SeusExamesDeRastreioColorretalFeminino() {
                 const userDoc = await getDoc(userDocRef);
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    setProximoExame(userData.proximoExameColorretalFeminino || null);
+                    setProximoExame(userData.proximoExameColorretal || null);
                     setExamesAnteriores(userData.examesAnterioresColorretalFeminino || []);
                 }
             }
@@ -96,7 +96,7 @@ export default function SeusExamesDeRastreioColorretalFeminino() {
             };
 
             if (dataProximoExame) {
-                updateData.proximoExameColorretalFeminino = dataProximoExame;
+                updateData.proximoExameColorretal = dataProximoExame;
             }
 
             updateDoc(userDocRef, updateData).catch((error) => {

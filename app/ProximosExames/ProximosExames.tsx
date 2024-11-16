@@ -1,6 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons'; // Certifique-se de instalar @expo/vector-icons
+import { useFocusEffect } from '@react-navigation/native'; // Para detectar o foco no componente
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../../config/firebase-config';
 
@@ -8,55 +9,72 @@ export default function ProximosExames() {
     const [proximosExames, setProximosExames] = useState<{ exame: string; date: string }[]>([]);
     const user = auth.currentUser;
 
-    useEffect(() => {
-        const fetchProximosExames = async () => {
-            if (user) {
-                try {
-                    const userDocRef = doc(db, 'usuarios', user.uid);
-                    const userDoc = await getDoc(userDocRef);
+    const fetchProximosExames = async () => {
+        if (user) {
+            try {
+                const userDocRef = doc(db, 'usuarios', user.uid);
+                const userDoc = await getDoc(userDocRef);
 
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        const exames = [];
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    console.log('Dados do usuário recuperados do Firestore:', userData);
 
-                        if (userData.proximoExamePulmao) {
-                            exames.push({
-                                exame: 'Tomografia Computadorizada (Pulmão)',
-                                date: userData.proximoExamePulmao,
-                            });
-                        }
+                    const exames = [];
 
-                        if (userData.proximoExameColorretal) {
-                            exames.push({
-                                exame: 'Colonoscopia (Colorretal)',
-                                date: userData.proximoExameColorretal,
-                            });
-                        }
-
-                        if (userData.proximoExameMama) {
-                            exames.push({
-                                exame: 'Mamografia (Mama)',
-                                date: userData.proximoExameMama,
-                            });
-                        }
-
-                        if (userData.proximoExameColoDeUtero) {
-                            exames.push({
-                                exame: 'Citologia Oncótica (Colo de Útero)',
-                                date: userData.proximoExameColoDeUtero,
-                            });
-                        }
-
-                        setProximosExames(exames);
+                    if (userData.proximoExamePulmao) {
+                        exames.push({
+                            exame: 'Tomografia Computadorizada (Pulmão)',
+                            date: userData.proximoExamePulmao,
+                        });
                     }
-                } catch (error) {
-                    console.error('Erro ao buscar exames:', error);
-                }
-            }
-        };
 
-        fetchProximosExames();
-    }, [user]);
+                    if (userData.proximoExameColorretal) {
+                        exames.push({
+                            exame: 'Colonoscopia (Colorretal)',
+                            date: userData.proximoExameColorretal,
+                        });
+                    }
+
+                    if (userData.proximoExameMama) {
+                        exames.push({
+                            exame: 'Mamografia (Mama)',
+                            date: userData.proximoExameMama,
+                        });
+                    }
+
+                    if (userData.proximoExameColoDeUtero) {
+                        exames.push({
+                            exame: 'Citologia Oncótica (Colo de Útero)',
+                            date: userData.proximoExameColoDeUtero,
+                        });
+                    }
+
+                    if (userData.proximoExameProstata) {
+                        exames.push({
+                            exame: 'PSA (Próstata)',
+                            date: userData.proximoExameProstata,
+                        });
+                    }
+
+                    console.log('Exames formatados para exibição:', exames);
+
+                    setProximosExames(exames);
+                } else {
+                    console.log('Nenhum documento encontrado para o usuário no Firestore.');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar exames do Firestore:', error);
+            }
+        } else {
+            console.log('Usuário não autenticado.');
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchProximosExames();
+        }, [user])
+    );
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -87,6 +105,8 @@ export default function ProximosExames() {
                     updates.proximoExameMama = null;
                 } else if (exameRemovido.exame.includes('Colo de Útero')) {
                     updates.proximoExameColoDeUtero = null;
+                } else if (exameRemovido.exame.includes('Próstata')) {
+                    updates.proximoExameProstata = null;
                 }
 
                 await updateDoc(userDocRef, updates);

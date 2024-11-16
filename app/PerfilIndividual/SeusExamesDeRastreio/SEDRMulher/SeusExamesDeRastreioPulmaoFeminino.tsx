@@ -19,8 +19,8 @@ export default function SeusExamesDeRastreioPulmaoFeminino() {
                 const userDoc = await getDoc(userDocRef);
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    setProximoExame(userData.proximoExamePulmaoFeminino || null);
-                    setExamesAnteriores(userData.examesAnterioresPulmaoFeminino || []);
+                    setProximoExame(userData.proximoExamePulmao || null);
+                    setExamesAnteriores(userData.examesAnterioresPulmao || []);
                 }
             }
         };
@@ -96,7 +96,7 @@ export default function SeusExamesDeRastreioPulmaoFeminino() {
             };
 
             if (dataProximoExame) {
-                updateData.proximoExamePulmaoFeminino = dataProximoExame;
+                updateData.proximoExamePulmao = dataProximoExame;
             }
 
             updateDoc(userDocRef, updateData).catch((error) => {
