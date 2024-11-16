@@ -1,13 +1,15 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { auth, db } from '../../../../config/firebase-config';
 
 export default function SeusExamesDeRastreioColorretalMasculino() {
     const [proximoExame, setProximoExame] = useState<string | null>(null);
-    const [examesAnteriores, setExamesAnteriores] = useState<{ date: string }[]>([]);
+    const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string }[]>([]);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [exameSelecionado, setExameSelecionado] = useState<string | null>(null);
     const user = auth.currentUser;
 
     useEffect(() => {
@@ -25,49 +27,124 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
         fetchExames();
     }, [user]);
 
-    const handleConfirm = (date: Date) => {
-        const updatedExames = [...examesAnteriores, { date: date.toISOString() }];
-        setExamesAnteriores(updatedExames);
-        setProximoExame(date.toISOString());
+    const showDatePicker = () => setDatePickerVisibility(true);
+    const hideDatePicker = () => setDatePickerVisibility(false);
+    const openModal = () => setModalVisible(true);
+    const closeModal = () => setModalVisible(false);
 
-        if (user) {
-            const userDocRef = doc(db, 'usuarios', user.uid);
-            updateDoc(userDocRef, {
-                proximoExameColorretal: date.toISOString(),
-                examesAnterioresColorretal: updatedExames
-            });
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const handleDateConfirm = (date: Date) => {
+        if (exameSelecionado) {
+            Alert.alert(
+                'Resultado do Exame',
+                'O resultado foi Normal ou Alterado?',
+                [
+                    {
+                        text: 'Normal',
+                        onPress: () => registrarExame(date, 'Normal'),
+                    },
+                    {
+                        text: 'Alterado',
+                        onPress: () => {
+                            Alert.alert('Atenção', 'Procure um médico para melhor investigação.');
+                            registrarExame(date, 'Alterado');
+                        },
+                    },
+                ]
+            );
         }
         hideDatePicker();
     };
 
-    const showDatePicker = () => setDatePickerVisibility(true);
-    const hideDatePicker = () => setDatePickerVisibility(false);
+    const registrarExame = (date: Date, resultado: string) => {
+        const formattedDate = date.toISOString();
+        const novoExame = { exame: exameSelecionado || '', date: formattedDate };
+        const examesAtualizados = [...examesAnteriores, novoExame];
+        setExamesAnteriores(examesAtualizados);
+
+        if (resultado === 'Normal') {
+            const dataProximoExame = new Date(date);
+            dataProximoExame.setFullYear(dataProximoExame.getFullYear() + 10);
+            setProximoExame(dataProximoExame.toISOString());
+        }
+
+        if (user) {
+            const userDocRef = doc(db, 'usuarios', user.uid);
+            updateDoc(userDocRef, {
+                proximoExameColorretal: proximoExame,
+                examesAnterioresColorretal: examesAtualizados,
+            });
+        }
+    };
 
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
+            
+            <View style={styles.header}>
+                <Text style={styles.title}>Seus Exames de Rastreio - Colorretal</Text>
+            </View>
 
-            <Text style={styles.title}>Seus Exames de Rastreio - Colorretal</Text>
-            <Text style={styles.subtitle}>Próximo: {proximoExame ? new Date(proximoExame).toLocaleDateString() : 'Nenhuma data marcada'}</Text>
-
-            <TouchableOpacity style={styles.button} onPress={showDatePicker}>
-                <Text style={styles.buttonText}>Marcar Próximo Exame</Text>
+            <TouchableOpacity style={styles.button} onPress={openModal}>
+                <Text style={styles.buttonText}>Registrar Exame</Text>
             </TouchableOpacity>
 
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Exames Prévios</Text>
+                <FlatList
+                    data={examesAnteriores}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <Text style={styles.listItem}>{`${item.exame} - ${formatDate(item.date)}`}</Text>
+                    )}
+                    ListEmptyComponent={<Text style={styles.emptyText}>Nenhum exame registrado.</Text>}
+                />
+            </View>
+
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Próximos Exames</Text>
+                <Text style={styles.nextExamText}>
+                    {proximoExame
+                        ? `Colonoscopia com 45 anos - ${formatDate(proximoExame)}`
+                        : 'Nenhuma data marcada'}
+                </Text>
+            </View>
+
+            {/* Modal para seleção de exame */}
+            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Selecione o Exame</Text>
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => {
+                                setExameSelecionado('Colonoscopia com 45 anos');
+                                showDatePicker();
+                                closeModal();
+                            }}
+                        >
+                            <Text style={styles.modalButtonText}>Colonoscopia com 45 anos</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalCancelButton} onPress={closeModal}>
+                            <Text style={styles.modalCancelButtonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Date Picker */}
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
-                onConfirm={handleConfirm}
+                onConfirm={handleDateConfirm}
                 onCancel={hideDatePicker}
-            />
-
-            <Text style={styles.subtitle}>Exames Anteriores:</Text>
-            <FlatList
-                data={examesAnteriores}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <Text style={styles.listItem}>{new Date(item.date).toLocaleDateString()}</Text>
-                )}
             />
         </View>
     );
@@ -78,38 +155,97 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#232d97',
         padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center'
+    },
+    header: {
+        backgroundColor: '#232d97',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        alignItems: 'center',
     },
     title: {
         fontSize: 24,
-        color: '#fff',
-        marginBottom: 20,
-        fontFamily: 'Quicksand-Bold'
-    },
-    subtitle: {
-        fontSize: 18,
-        color: '#fff',
-        marginBottom: 10,
-        fontFamily: 'Quicksand-Medium'
+        color: '#FFFFFF',
+        textAlign: 'center',
+        fontFamily: 'Quicksand-Bold',
     },
     button: {
-        backgroundColor: '#3949AB',
+        backgroundColor: '#ff5721',
         paddingVertical: 15,
-        paddingHorizontal: 40,
         borderRadius: 25,
+        alignItems: 'center',
         marginVertical: 20,
-        alignItems: 'center'
     },
     buttonText: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 18,
-        fontFamily: 'Quicksand-Bold'
+        fontFamily: 'Quicksand-Bold',
+    },
+    sectionContainer: {
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 20,
+        color: '#FFFFFF',
+        fontFamily: 'Quicksand-Bold',
+        marginBottom: 10,
     },
     listItem: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 16,
         fontFamily: 'Quicksand-Medium',
-        marginBottom: 10
-    }
+        marginBottom: 5,
+    },
+    nextExamText: {
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontFamily: 'Quicksand-Medium',
+        textAlign: 'center',
+        marginVertical: 10,
+    },
+    emptyText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily: 'Quicksand-Medium',
+        textAlign: 'center',
+        marginVertical: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#FFFFFF',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '80%',
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontFamily: 'Quicksand-Bold',
+        marginBottom: 20,
+    },
+    modalButton: {
+        backgroundColor: '#3949AB',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        marginBottom: 10,
+        alignItems: 'center',
+    },
+    modalButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily: 'Quicksand-Bold',
+    },
+    modalCancelButton: {
+        marginTop: 10,
+    },
+    modalCancelButtonText: {
+        color: '#3949AB',
+        fontSize: 16,
+        fontFamily: 'Quicksand-Bold',
+    },
 });
