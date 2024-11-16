@@ -85,7 +85,7 @@ const SinaisESintomas: React.FC = () => {
         keyExtractor={(item, index) => `${item.combinacao}_${index}`}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text style={styles.sintomasText}>Sintomas: {item.sintomas.join(', ')}</Text>
+            <Text style={styles.sintomasText}>Sintomas: {item.sintomas.join('; ')}</Text>
           </View>
         )}
       />
