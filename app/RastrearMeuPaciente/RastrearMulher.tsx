@@ -48,7 +48,7 @@ export default function PerfilIndividualHomem() {
                 <Text style={styles.buttonText}>Colo de Útero</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colorretal')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Mama')}>
                 <Text style={styles.buttonText}>Mama</Text>
             </TouchableOpacity>
 

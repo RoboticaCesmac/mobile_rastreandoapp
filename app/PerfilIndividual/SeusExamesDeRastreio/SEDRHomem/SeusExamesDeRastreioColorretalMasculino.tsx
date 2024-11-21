@@ -1,16 +1,34 @@
+import * as ImagePicker from 'expo-image-picker';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { auth, db } from '../../../../config/firebase-config';
 
+
 export default function SeusExamesDeRastreioColorretalMasculino() {
     const [proximoExame, setProximoExame] = useState<string | null>(null);
-    const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string }[]>([]);
+    const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string; photo?: string }[]>([]);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
+    const [isImageModalVisible, setImageModalVisible] = useState(false);
+    const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
     const [exameSelecionado, setExameSelecionado] = useState<string | null>(null);
     const user = auth.currentUser;
+
+    useEffect(() => {
+        const solicitarPermissoes = async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert(
+                    'Permissão Negada',
+                    'Permita o acesso à galeria para registrar exames.',
+                    [{ text: 'OK' }]
+                );
+            }
+        };
+        solicitarPermissoes();
+    }, []);
 
     useEffect(() => {
         const fetchExames = async () => {
@@ -31,6 +49,17 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
     const hideDatePicker = () => setDatePickerVisibility(false);
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
+    const openImageModal = (uri: string | undefined) => {
+        if (uri) {
+            console.log('Imagem clicada:', uri);
+            setSelectedImageUri(uri);
+            setImageModalVisible(true);
+        } else {
+            Alert.alert('Erro', 'A imagem selecionada não é válida.');
+        }
+    };
+
+    const closeImageModal = () => setImageModalVisible(false);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -59,13 +88,13 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
                 [
                     {
                         text: 'Normal',
-                        onPress: () => registrarExame(date, 'Normal'),
+                        onPress: () => solicitarFoto(date, 'Normal'),
                     },
                     {
                         text: 'Alterado',
                         onPress: () => {
                             Alert.alert('Atenção', 'Procure um médico para melhor investigação.');
-                            registrarExame(date, 'Alterado');
+                            solicitarFoto(date, 'Alterado');
                         },
                     },
                 ]
@@ -74,9 +103,28 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
         hideDatePicker();
     };
 
-    const registrarExame = (date: Date, resultado: string) => {
+    const solicitarFoto = async (date: Date, resultado: string) => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permissão Negada', 'É necessário permitir acesso à galeria.');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 0.8,
+        });
+
+        if (!result.canceled && result.assets && result.assets[0].uri) {
+            registrarExame(date, resultado, result.assets[0].uri);
+        } else {
+            Alert.alert('Foto não adicionada', 'Nenhuma foto foi selecionada.');
+        }
+    };
+
+    const registrarExame = (date: Date, resultado: string, photoUri?: string) => {
         const formattedDate = date.toISOString();
-        const novoExame = { exame: exameSelecionado || '', date: formattedDate };
+        const novoExame = { exame: exameSelecionado || '', date: formattedDate, photo: photoUri || '' };
         const examesAtualizados = [...examesAnteriores, novoExame];
         setExamesAnteriores(examesAtualizados);
 
@@ -96,9 +144,9 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
             <StatusBar hidden={true} />
-            
+
             <View style={styles.header}>
                 <Text style={styles.title}>Seus Exames de Rastreio - Colorretal</Text>
             </View>
@@ -112,11 +160,38 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
                 <FlatList
                     data={examesAnteriores}
                     keyExtractor={(item, index) => index.toString()}
+                    nestedScrollEnabled={true} // Permite rolagem aninhada
                     renderItem={({ item }) => (
-                        <Text style={styles.listItem}>{`${item.exame} - ${formatDate(item.date)}`}</Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                console.log('Clicou no item:', item); // Diagnóstico
+                                if (item.photo) {
+                                    openImageModal(item.photo); // Abre o modal com a foto
+                                } else {
+                                    console.log('Sem imagem');
+                                }
+                            }}
+                            activeOpacity={0.7}
+                            style={styles.listItem}
+                        >
+                            <View style={styles.row}>
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.listText}>
+                                        {`${item.exame} - ${formatDate(item.date)}`}
+                                    </Text>
+                                </View>
+                                {item.photo && (
+                                    <Image source={{ uri: item.photo }} style={styles.image} />
+                                )}
+                            </View>
+                        </TouchableOpacity>
                     )}
                     ListEmptyComponent={<Text style={styles.emptyText}>Nenhum exame registrado.</Text>}
                 />
+
+
+
+
             </View>
 
             <View style={styles.sectionContainer}>
@@ -128,7 +203,6 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
                 </Text>
             </View>
 
-            {/* Modal para seleção de exame */}
             <Modal visible={isModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -150,14 +224,22 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
                 </View>
             </Modal>
 
-            {/* Date Picker */}
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
                 onConfirm={handleDateConfirm}
                 onCancel={hideDatePicker}
             />
-        </View>
+
+            {/* Modal para exibir imagem ampliada */}
+            <Modal visible={isImageModalVisible} transparent={true} onRequestClose={closeImageModal}>
+                <View style={styles.imageModalContainer}>
+                    {selectedImageUri && (
+                        <Image source={{ uri: selectedImageUri }} style={styles.fullImage} />
+                    )}
+                </View>
+            </Modal>
+        </ScrollView>
     );
 }
 
@@ -168,9 +250,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     header: {
-        backgroundColor: '#232d97',
         paddingVertical: 10,
-        paddingHorizontal: 20,
         alignItems: 'center',
     },
     title: {
@@ -194,6 +274,11 @@ const styles = StyleSheet.create({
     sectionContainer: {
         marginBottom: 20,
     },
+    scrollContainer: {
+        flexGrow: 1, // Garante que o conteúdo possa ser rolado
+        padding: 20, // Espaçamento interno
+        backgroundColor: '#232d97', // Mantém o fundo azul
+    },
     sectionTitle: {
         fontSize: 20,
         color: '#FFFFFF',
@@ -201,22 +286,33 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     listItem: {
+        flexDirection: 'row', // Alinha os itens na horizontal
+        alignItems: 'center', // Centraliza verticalmente
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        marginBottom: 10,
+        backgroundColor: '#ffffff10', // Fundo translúcido para contraste
+        borderRadius: 8,
+    },
+    listText: {
         color: '#FFFFFF',
         fontSize: 16,
-        fontFamily: 'Quicksand-Medium',
-        marginBottom: 5,
+        flex: 1,
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 5,
     },
     nextExamText: {
         color: '#FFFFFF',
         fontSize: 18,
-        fontFamily: 'Quicksand-Medium',
         textAlign: 'center',
         marginVertical: 10,
     },
     emptyText: {
         color: '#FFFFFF',
         fontSize: 16,
-        fontFamily: 'Quicksand-Medium',
         textAlign: 'center',
         marginVertical: 10,
     },
@@ -259,4 +355,40 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Quicksand-Bold',
     },
+    imageModalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    fullImage: {
+        width: '90%',
+        height: '80%',
+        resizeMode: 'contain',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 40,
+        right: 20,
+        backgroundColor: '#ff5721',
+        padding: 10,
+        borderRadius: 5,
+    },
+    closeButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily: 'Quicksand-Bold',
+    },
+
+    row: {
+        flexDirection: 'row', // Itens na mesma linha
+        alignItems: 'center', // Centraliza verticalmente
+        justifyContent: 'space-between', // Espaço entre os elementos
+        flex: 1,
+    },
+    textContainer: {
+        flex: 1, // Garante que o texto ocupe o espaço disponível
+        marginRight: 10, // Espaçamento entre texto e imagem
+    },
+
 });

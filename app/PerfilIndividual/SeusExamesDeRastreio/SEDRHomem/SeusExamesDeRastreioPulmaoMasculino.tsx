@@ -1,14 +1,17 @@
+import * as ImagePicker from 'expo-image-picker';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { auth, db } from '../../../../config/firebase-config';
 
 export default function SeusExamesDeRastreioPulmaoMasculino() {
     const [proximoExame, setProximoExame] = useState<string | null>(null);
-    const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string }[]>([]);
+    const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string; photo?: string }[]>([]);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
+    const [isImageModalVisible, setImageModalVisible] = useState(false);
+    const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
     const [exameSelecionado, setExameSelecionado] = useState<string | null>(null);
     const user = auth.currentUser;
 
@@ -31,6 +34,13 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
     const hideDatePicker = () => setDatePickerVisibility(false);
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
+    const openImageModal = (uri: string | undefined) => {
+        if (uri) {
+            setSelectedImageUri(uri);
+            setImageModalVisible(true);
+        }
+    };
+    const closeImageModal = () => setImageModalVisible(false);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -40,7 +50,7 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
         return `${day}/${month}/${year}`;
     };
 
-    const handleDateConfirm = (date: Date) => {
+    const handleDateConfirm = async (date: Date) => {
         const today = new Date();
 
         if (date > today) {
@@ -59,13 +69,13 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
                 [
                     {
                         text: 'Normal',
-                        onPress: () => registrarExame(date, 'Normal'),
+                        onPress: () => solicitarFoto(date, 'Normal'),
                     },
                     {
                         text: 'Alterado',
                         onPress: () => {
                             Alert.alert('Atenção', 'Procure um médico para melhor investigação.');
-                            registrarExame(date, 'Alterado');
+                            solicitarFoto(date, 'Alterado');
                         },
                     },
                 ]
@@ -74,9 +84,28 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
         hideDatePicker();
     };
 
-    const registrarExame = (date: Date, resultado: string) => {
+    const solicitarFoto = async (date: Date, resultado: string) => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permissão Negada', 'É necessário permitir acesso à galeria.');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 0.8,
+        });
+
+        if (!result.canceled && result.assets && result.assets[0].uri) {
+            registrarExame(date, resultado, result.assets[0].uri);
+        } else {
+            Alert.alert('Foto não adicionada', 'Nenhuma foto foi selecionada.');
+        }
+    };
+
+    const registrarExame = (date: Date, resultado: string, photoUri?: string) => {
         const formattedDate = date.toISOString();
-        const novoExame = { exame: exameSelecionado || '', date: formattedDate };
+        const novoExame = { exame: exameSelecionado || '', date: formattedDate, photo: photoUri || '' };
         const examesAtualizados = [...examesAnteriores, novoExame];
         setExamesAnteriores(examesAtualizados);
 
@@ -108,7 +137,7 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-            
+
             <View style={styles.header}>
                 <Text style={styles.title}>Seus Exames de Rastreio - Pulmão</Text>
             </View>
@@ -123,7 +152,19 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
                     data={examesAnteriores}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <Text style={styles.listItem}>{`${item.exame} - ${formatDate(item.date)}`}</Text>
+                        <TouchableOpacity
+                            style={styles.listItem}
+                            onPress={() => item.photo && openImageModal(item.photo)}
+                        >
+                            <View style={styles.row}>
+                                <Text style={styles.listText}>
+                                    {`${item.exame} - ${formatDate(item.date)}`}
+                                </Text>
+                                {item.photo && (
+                                    <Image source={{ uri: item.photo }} style={styles.image} />
+                                )}
+                            </View>
+                        </TouchableOpacity>
                     )}
                     ListEmptyComponent={<Text style={styles.emptyText}>Nenhum exame registrado.</Text>}
                 />
@@ -138,7 +179,6 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
                 </Text>
             </View>
 
-            {/* Modal para seleção de exame */}
             <Modal visible={isModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -160,13 +200,21 @@ export default function SeusExamesDeRastreioPulmaoMasculino() {
                 </View>
             </Modal>
 
-            {/* Date Picker */}
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
                 onConfirm={handleDateConfirm}
                 onCancel={hideDatePicker}
             />
+
+            {/* Modal para exibir imagem ampliada */}
+            <Modal visible={isImageModalVisible} transparent={true} onRequestClose={closeImageModal}>
+                <View style={styles.imageModalContainer}>
+                    {selectedImageUri && (
+                        <Image source={{ uri: selectedImageUri }} style={styles.fullImage} />
+                    )}
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -211,22 +259,33 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     listItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        marginBottom: 10,
+        backgroundColor: '#ffffff10',
+        borderRadius: 8,
+    },
+    listText: {
         color: '#FFFFFF',
         fontSize: 16,
-        fontFamily: 'Quicksand-Medium',
-        marginBottom: 5,
+        flex: 1,
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 5,
     },
     nextExamText: {
         color: '#FFFFFF',
         fontSize: 18,
-        fontFamily: 'Quicksand-Medium',
         textAlign: 'center',
         marginVertical: 10,
     },
     emptyText: {
         color: '#FFFFFF',
         fontSize: 16,
-        fontFamily: 'Quicksand-Medium',
         textAlign: 'center',
         marginVertical: 10,
     },
@@ -268,5 +327,22 @@ const styles = StyleSheet.create({
         color: '#3949AB',
         fontSize: 16,
         fontFamily: 'Quicksand-Bold',
+    },
+    imageModalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    fullImage: {
+        width: '90%',
+        height: '80%',
+        resizeMode: 'contain',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flex: 1,
     },
 });

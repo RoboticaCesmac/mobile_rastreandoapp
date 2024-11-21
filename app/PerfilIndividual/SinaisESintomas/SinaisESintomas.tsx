@@ -81,14 +81,19 @@ const SinaisESintomas: React.FC = () => {
 
       <Text style={styles.title}>Sinais e Sintomas para {sexo} - {neoplasia}</Text>
       <FlatList
-        data={sinaisSintomas}
-        keyExtractor={(item, index) => `${item.combinacao}_${index}`}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.sintomasText}>Sintomas: {item.sintomas.join('; ')}</Text>
-          </View>
-        )}
-      />
+  data={sinaisSintomas}
+  keyExtractor={(item, index) => `${item.combinacao}_${index}`}
+  renderItem={({ item }) => (
+    <View style={styles.item}>
+      {item.sintomas.map((sintoma, index) => (
+        <View key={`${item.combinacao}_${index}`} style={styles.sintomaItem}>
+          <Text style={styles.sintomasText}>{sintoma}</Text>
+        </View>
+      ))}
+    </View>
+  )}
+/>
+
     </View>
   );
 };
@@ -138,6 +143,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: 'Quicksand-Medium',
   },
+  sintomaItem: {
+    backgroundColor: '#5C6BC0',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  
 });
 
 export default SinaisESintomas;
