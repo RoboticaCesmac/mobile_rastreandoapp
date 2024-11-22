@@ -6,16 +6,15 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const fatoresDeRisco = [
-  'Idade > 50 anos',
-  'História familiar de câncer de ovário, câncer de mama em homens, câncer de mama em mãe, irmã ou filha principalmente antes dos 50 anos',
-  'Menarca precoce < 12 anos',
-  'Menopausa tardia > 45 anos',
-  'Nuliparidade',
-  'Uso de ACO e TRH',
-  'Mamas densas',
-  'Sedentarismo < 150 minutos de exercício físico na semana',
-  'Tabagismo',
-  'Obesidade',
+  'Possui entre 40 e 74 anos',
+  'História familiar de câncer de ovário, câncer de mama em homens, câncer de mama em mãe, irmã ou filha',
+  'Realiza menos de 150min de atividade física por semana',
+  'Primeira menstruação < 12 anos',
+  'Menopausa > 45 anos',
+  'Fuma ou já fumou',
+  'Possui sobrepeso',
+  'Nunca engravidou',
+  'Fez ou faz uso de anticoncepcional oral ou terapia de reposição hormonal',
   'Nenhuma das anteriores'
 ];
 
@@ -68,18 +67,29 @@ const CalculeSeuRiscoMama = () => {
     let resultadoTexto = '';
 
     if (selecionados.includes('Nenhuma das anteriores')) {
-      resultadoTexto = 'Você possui risco habitual para câncer de mama. No entanto, é importante realizar consultas regulares com seu médico e manter-se atenta a sinais e sintomas.';
-    } else if (selecionados.includes('Idade > 50 anos')) {
-      const fatoresAdicionais = selecionados.length - 1;
+      resultadoTexto =
+        'Você possui risco habitual para este tipo de câncer, porém, você ainda não possui indicação de iniciar o rastreio, converse com seu médico para entender quando ele deve iniciar e fique atento aos sinais e sintomas, aos fatores de risco e métodos de prevenção';
+    } else if (selecionados.includes('História familiar de câncer de ovário, câncer de mama em homens, câncer de mama em mãe, irmã ou filha')) {
+      resultadoTexto =
+        'Pelas informações fornecidas, você possui alto risco para câncer de mama, procure um especialista para confirmar o seu alto risco e individualizar seus exames de rastreio.';
+    } else if (selecionados.includes('Possui entre 40 e 74 anos')) {
+      const fatoresAdicionais = selecionados.filter(
+        (fator) => fator !== 'Possui entre 40 e 74 anos' && fator !== 'Nenhuma das anteriores'
+      ).length;
+
       if (fatoresAdicionais === 0) {
-        resultadoTexto = 'Você possui risco habitual para câncer de mama e deve realizar mamografia a cada 2 anos.';
+        resultadoTexto =
+          'Você possui risco habitual para este tipo de câncer e sua indicação de rastreio é a realização de mamografia anualmente';
       } else if (fatoresAdicionais === 1) {
-        resultadoTexto = 'Você possui risco habitual para câncer de mama e deve realizar mamografia a cada 2 anos.';
+        resultadoTexto =
+          'Você possui risco habitual para este tipo de câncer e sua indicação de rastreio é a realização de mamografia anualmente';
       } else {
-        resultadoTexto = 'Você possui maior risco para câncer de mama. É recomendável realizar mamografia anualmente e consultar um médico para avaliação personalizada.';
+        resultadoTexto =
+          'Você possui maior risco para este tipo de câncer, sua indicação de rastreio é a realização de mamografia anualmente, além de mudanças de hábitos de vida para reduzir seu risco, porém, não deixe de procurar um médico para avaliar a necessidade de outro método de rastreio';
       }
     } else {
-      resultadoTexto = 'Você possui maior risco para câncer de mama. Procure seu médico para determinar o método de rastreio mais adequado e a frequência de exames.';
+      resultadoTexto =
+        'Você possui risco habitual para este tipo de câncer, porém, é importante discutir com seu médico qual a melhor estratégia de rastreio.';
     }
 
     setResultado(resultadoTexto);
@@ -181,11 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#3949AB',
     padding: 10,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 5,
   },
   checkbox: {
     width: 24,
@@ -207,7 +212,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontFamily: 'Quicksand-Medium',
-    textAlign: 'left',
     flexShrink: 1,
   },
   button: {
@@ -218,11 +222,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: '80%',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 5,
   },
   buttonText: {
     color: '#FFFFFF',
