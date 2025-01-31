@@ -21,6 +21,7 @@ export default function SplashScreenApp() {
   }, [fontsLoaded]);
 
   useEffect(() => {
+    console.log()
     const timer = setTimeout(() => {
       router.push({ pathname: '/paginaInicial' });
     }, 3500);

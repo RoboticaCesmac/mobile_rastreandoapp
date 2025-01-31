@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "rastreando-app",
+    "name": "Rastreando App",
     "slug": "rastreando-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.roboticacesmac.rastreandoapp"
     },
     "web": {
       "bundler": "metro",
