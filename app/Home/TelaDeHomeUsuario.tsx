@@ -17,13 +17,19 @@ export default function TelaDeHomeUsuario() {
   const [userName, setUserName] = useState('');
   const [userSexo, setUserSexo] = useState<string | null>(null);
 
+  
   useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => true;
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, [])
-  );
+  useCallback(() => {
+    const onBackPress = () => {
+      return true;
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => subscription.remove(); // remove corretamente o listener
+  }, [])
+);
+
 
   useEffect(() => {
     const fetchUserNameAndSexo = async () => {

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Rastreando App",
-    "slug": "rastreando-app",
+    "slug": "rastreando",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,11 +16,12 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.roboticacesmac.rastreandoapp"
+      "package": "com.roboticacesmac.rastreando"
     },
     "web": {
       "bundler": "metro",
@@ -39,7 +40,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8c62c146-5d16-4adb-ad1f-017c6ad20cdb"
+        "projectId": "67bd3264-79c3-4112-95fa-58c54651a2c5"
       }
     }
   }

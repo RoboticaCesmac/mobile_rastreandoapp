@@ -14,17 +14,17 @@ export default function TelaDeHomeProfissional() {
 
 
   useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        return true;
-      };
+  useCallback(() => {
+    const onBackPress = () => {
+      return true;
+    };
 
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, [])
-  );
+    return () => subscription.remove(); // remove corretamente o listener
+  }, [])
+);
+
 
   useEffect(() => {
     const fetchUserName = async () => {
