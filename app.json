@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "backgroundColor": "#3498db"
+      "backgroundColor": "#3498db",
+      "bundleIdentifier": "com.roboticacesmac.rastreando",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "versionCode": 3,
