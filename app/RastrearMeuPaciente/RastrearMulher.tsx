@@ -37,12 +37,20 @@ export default function PerfilIndividualHomem() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
+            {/* Botão de voltar no topo esquerdo */}
+            {/* <TouchableOpacity
+                style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+                onPress={() => router.back()}
+            >
+                <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+            </TouchableOpacity> */}
+
             <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
                 <Text style={styles.changeButtonText}>Trocar</Text>
             </TouchableOpacity>
 
-            <Text style={styles.title}>Mulher</Text>
+            <Text style={[styles.title, { marginTop: 70 }]}>Mulher</Text>
 
             <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colo de Útero')}>
                 <Text style={styles.buttonText}>Colo de Útero</Text>
@@ -51,7 +59,6 @@ export default function PerfilIndividualHomem() {
             <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Mama')}>
                 <Text style={styles.buttonText}>Mama</Text>
             </TouchableOpacity>
-
 
             <TouchableOpacity style={styles.button} onPress={() => router.push('/RastrearMeuPaciente/RastrearPacienteNeoplasia?neoplasia=Colorretal')}>
                 <Text style={styles.buttonText}>Colorretal</Text>

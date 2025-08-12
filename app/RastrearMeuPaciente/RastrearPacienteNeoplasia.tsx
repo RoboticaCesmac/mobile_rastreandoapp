@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { auth } from '../../config/firebase-config';
 
 const firestore = getFirestore();
@@ -120,7 +121,16 @@ export default function RastrearPacienteNeoplasia() {
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-            <Text style={styles.title}>{title}</Text>
+
+            {/* Botão de voltar no topo esquerdo */}
+            <TouchableOpacity
+                style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+                onPress={() => router.back()}
+            >
+                <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+            </TouchableOpacity>
+
+            <Text style={[styles.title, { marginTop: 70 }]}>{title}</Text>
             <TouchableOpacity
                 style={styles.button}
                 onPress={redirecionarParaSinaisAlarmeFatoresRisco}>
