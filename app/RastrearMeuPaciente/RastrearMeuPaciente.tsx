@@ -53,7 +53,16 @@ export default function RastrearMeuPaciente() {
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-            <Text style={styles.title}>Quem você quer rastrear?</Text>
+
+            {/* Botão de voltar no topo esquerdo */}
+            <TouchableOpacity
+                style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+                onPress={() => router.back()}
+            >
+                <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+            </TouchableOpacity>
+
+            <Text style={[styles.title, { marginTop: 70 }]}>Quem você quer rastrear?</Text>
             <TouchableOpacity
                 style={[styles.optionButton, escolha === 'mulher' && styles.optionButtonSelected]}
                 onPress={() => setEscolha('mulher')}>

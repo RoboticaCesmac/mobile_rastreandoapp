@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'; // Biblioteca de ícones
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { signOut } from 'firebase/auth';
@@ -22,10 +23,11 @@ export default function TelaDeHomeUsuario() {
         return true;
       };
 
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      return () => {
+        subscription.remove();
+      };
     }, [])
   );
 
@@ -104,9 +106,12 @@ export default function TelaDeHomeUsuario() {
       <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta/MarcarConsulta')}>
         <Text style={styles.buttonText}>Marque uma consulta</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        <Ionicons name="exit-outline" size={24} color="#FFFFFF" />
-        <Text style={styles.backButtonText}>Voltar</Text>
+      {/* Botão de voltar no topo esquerdo */}
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+        onPress={handleBack}
+      >
+        <FontAwesome5 name="arrow-left" size={28} color="#fff" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="exit-outline" size={24} color="#FFFFFF" />
