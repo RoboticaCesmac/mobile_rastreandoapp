@@ -160,6 +160,10 @@ export default function PerfilIndividualMulher() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
+            <TouchableOpacity style={styles.backButtonTop} onPress={() => router.back()}>
+                <FontAwesome5 name="arrow-left" size={16} color="#fff" />
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/PerfilIndividual/PerfilIndividual')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />
                 <Text style={styles.changeButtonText}>Trocar</Text>
@@ -312,5 +316,20 @@ const styles = StyleSheet.create({
         marginBottom: -20,
         left: -255,
         zIndex: 0,
+    },
+    backButtonTop: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        backgroundColor: '#ff5721',
+        paddingVertical: 6,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        zIndex: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
     },
 });
