@@ -84,7 +84,7 @@ export default function PerfilInformacoesNeoplasia() {
                 }
 
                 if (caminho) {
-                    router.push(caminho as Href<string>);
+                    router.push(caminho);
                 }
             } else {
                 console.error('Documento do usuário não encontrado');
@@ -143,7 +143,7 @@ export default function PerfilInformacoesNeoplasia() {
                 }
 
                 if (caminho) {
-                    router.push(caminho as Href<string>);
+                    router.push(caminho);
                 }
             } else {
                 console.error('Documento do usuário não encontrado');
@@ -210,6 +210,9 @@ export default function PerfilInformacoesNeoplasia() {
                 onPress={redirecionarParaSinaisESintomas}>
                 <Text style={styles.buttonText}>Sinais e sintomas</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.backButtonBottom} onPress={() => router.back()}>
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -262,5 +265,24 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         alignSelf: 'center',
+    },
+    backButtonBottom: {
+        backgroundColor: '#ff5721',
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        borderRadius: 25,
+        marginTop: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    backButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily: 'Quicksand-Bold',
+        textAlign: 'center',
     },
 });
