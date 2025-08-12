@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React, { useEffect } from 'react';
-import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 
 export default function PaginaInicial() {
   const router = useRouter();
@@ -26,11 +26,14 @@ export default function PaginaInicial() {
     <View style={styles.container}>
       <StatusBar hidden={true} />
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleRastreando}>RASTREANDO</Text>
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../assets/images/RastreandoNewLogo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
-      <FontAwesome5 name="ribbon" size={40} color="#FFFFFF" />
-      <Text style={styles.subtitle}>APP</Text>
+
       <View style={styles.subcontainer}>
         <LottieView
           source={require('../assets/lottie/logo.json')}
@@ -58,12 +61,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#232d97',
+    backgroundColor: '#3949AB',
   },
-  titleContainer: {
-    flexDirection: 'row',
+  logoContainer: {
     alignItems: 'center',
     marginBottom: 10,
+  },
+  logo: {
+    width: 380,
+    height: 180,
+    marginBottom: -20,
   },
   subcontainer: {
     justifyContent: 'center',
