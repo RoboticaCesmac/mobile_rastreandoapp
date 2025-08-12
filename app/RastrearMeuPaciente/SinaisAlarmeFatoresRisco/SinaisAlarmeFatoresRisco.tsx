@@ -1,10 +1,12 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { db } from '../../../config/firebase-config';
 
 const SinaisAlarmeFatoresRisco: React.FC = () => {
+  const router = useRouter();
   const { sexo, neoplasia } = useLocalSearchParams();
   const [sinaisFatores, setSinaisFatores] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,7 +65,15 @@ const SinaisAlarmeFatoresRisco: React.FC = () => {
     <View style={styles.container}>
       <StatusBar hidden={true} />
 
-      <Text style={styles.title}>Sinais de Alarme e Fatores de Risco</Text>
+      {/* Botão de voltar no topo esquerdo */}
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+        onPress={() => router.back()}
+      >
+        <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+      </TouchableOpacity>
+
+      <Text style={[styles.title, { marginTop: 70 }]}>Sinais de Alarme e Fatores de Risco</Text>
       <FlatList
         data={sinaisFatores}
         keyExtractor={(item) => item.adminId + item.id}

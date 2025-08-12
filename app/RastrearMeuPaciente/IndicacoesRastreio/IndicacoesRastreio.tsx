@@ -1,7 +1,8 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { db } from '../../../config/firebase-config';
 
 const IndicacoesRastreio: React.FC = () => {
@@ -66,10 +67,20 @@ const IndicacoesRastreio: React.FC = () => {
         );
     }
 
+    const router = useRouter();
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-            <Text style={styles.title}>Indicações de Rastreio</Text>
+
+            {/* Botão de voltar no topo esquerdo */}
+            <TouchableOpacity
+                style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+                onPress={() => router.back()}
+            >
+                <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+            </TouchableOpacity>
+
+            <Text style={[styles.title, { marginTop: 70 }]}>Indicações de Rastreio</Text>
             {texto ? (
                 <Text style={styles.indicacaoText}>{texto}</Text>
             ) : (
