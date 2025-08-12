@@ -1,4 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons'; // Certifique-se de instalar @expo/vector-icons
+import { useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native'; // Para detectar o foco no componente
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
@@ -6,6 +8,7 @@ import { Alert, FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } 
 import { auth, db } from '../../config/firebase-config';
 
 export default function ProximosExames() {
+    const router = useRouter();
     const [proximosExames, setProximosExames] = useState<{ exame: string; date: string }[]>([]);
     const user = auth.currentUser;
 
@@ -134,7 +137,15 @@ export default function ProximosExames() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
-            <Text style={styles.title}>Próximos Exames</Text>
+            {/* Botão de voltar no topo esquerdo */}
+            <TouchableOpacity
+                style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+                onPress={() => router.back()}
+            >
+                <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+            </TouchableOpacity>
+
+            <Text style={[styles.title, { marginTop: 70 }]}>Próximos Exames</Text>
 
             <FlatList
                 data={proximosExames}
