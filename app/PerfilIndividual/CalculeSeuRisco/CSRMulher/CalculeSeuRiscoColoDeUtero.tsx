@@ -4,6 +4,7 @@ import { getAuth } from 'firebase/auth';
 import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const fatoresDeRisco = [
   'Possui entre 22 e 65 anos e já teve relações sexuais',
@@ -114,6 +115,10 @@ const CalculeSeuRiscoColoDeUtero = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <StatusBar hidden={true} />
+      <View style={{ height: 40 }} />
+      <TouchableOpacity style={styles.backButtonTop} onPress={() => router.back()}>
+        <FontAwesome5 name="arrow-left" size={18} color="#fff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Marque as Informações Abaixo</Text>
       <Text style={styles.subTitle}>Colo de Útero</Text>
       {fatoresDeRisco.map((fator, index) => (
@@ -259,6 +264,21 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
     fontFamily: 'Quicksand-Bold',
+  },
+  backButtonTop: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    backgroundColor: '#ff5721',
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
 });
 
