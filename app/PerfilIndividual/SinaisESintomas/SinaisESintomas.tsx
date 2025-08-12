@@ -1,10 +1,12 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { db } from '../../../config/firebase-config';
 
 const SinaisESintomas: React.FC = () => {
+  const router = useRouter();
   const { sexo, neoplasia } = useLocalSearchParams();
   const [sinaisSintomas, setSinaisSintomas] = useState<{ combinacao: string; sintomas: string[] }[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,7 +81,15 @@ const SinaisESintomas: React.FC = () => {
     <View style={styles.container}>
       <StatusBar hidden={true} />
 
-      <Text style={styles.title}>Sinais e Sintomas para {sexo} - {neoplasia}</Text>
+      {/* Botão de voltar no topo esquerdo */}
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+        onPress={() => router.back()}
+      >
+        <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+      </TouchableOpacity>
+
+      <Text style={[styles.title, { marginTop: 70 }]}>Sinais e Sintomas para {sexo} - {neoplasia}</Text>
       <FlatList
         data={sinaisSintomas}
         keyExtractor={(item, index) => `${item.combinacao}_${index}`}

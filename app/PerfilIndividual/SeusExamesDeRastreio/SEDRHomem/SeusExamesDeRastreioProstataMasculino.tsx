@@ -2,10 +2,13 @@ import * as ImagePicker from 'expo-image-picker';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Image, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { auth, db } from '../../../../config/firebase-config';
 
 export default function SeusExamesDeRastreioProstataMasculino() {
+    const router = useRouter();
     const [proximoExame, setProximoExame] = useState<string | null>(null);
     const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string; photo?: string }[]>([]);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -137,7 +140,10 @@ export default function SeusExamesDeRastreioProstataMasculino() {
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-
+            <View style={{ height: 40 }} />
+            <TouchableOpacity style={styles.backButtonTop} onPress={() => router.back()}>
+                <FontAwesome5 name="arrow-left" size={18} color="#fff" />
+            </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.title}>Seus Exames de Rastreio - Próstata</Text>
             </View>
@@ -357,6 +363,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         flex: 1,
+    },
+    backButtonTop: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        backgroundColor: '#ff5721',
+        paddingVertical: 6,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        zIndex: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
     },
 });
 

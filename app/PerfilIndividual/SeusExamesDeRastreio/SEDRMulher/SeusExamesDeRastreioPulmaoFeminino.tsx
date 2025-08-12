@@ -1,4 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Image, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -6,6 +8,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { auth, db } from '../../../../config/firebase-config';
 
 export default function SeusExamesDeRastreioPulmaoFeminino() {
+    const router = useRouter();
     const [proximoExame, setProximoExame] = useState<string | null>(null);
     const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string; photo?: string }[]>([]);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -138,7 +141,15 @@ export default function SeusExamesDeRastreioPulmaoFeminino() {
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
-            <View style={styles.header}>
+            {/* Botão de voltar no topo esquerdo */}
+            <TouchableOpacity
+                style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+                onPress={() => router.back()}
+            >
+                <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+            </TouchableOpacity>
+
+            <View style={[styles.header, { marginTop: 40 }]}> {/* Espaço para o botão */}
                 <Text style={styles.title}>Seus Exames de Rastreio - Pulmão</Text>
             </View>
 

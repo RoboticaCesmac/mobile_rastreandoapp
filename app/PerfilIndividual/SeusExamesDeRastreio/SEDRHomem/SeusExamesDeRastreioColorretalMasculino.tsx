@@ -4,9 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Image, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { auth, db } from '../../../../config/firebase-config';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 
 export default function SeusExamesDeRastreioColorretalMasculino() {
+    const router = useRouter();
     const [proximoExame, setProximoExame] = useState<string | null>(null);
     const [examesAnteriores, setExamesAnteriores] = useState<{ exame: string; date: string; photo?: string }[]>([]);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -146,7 +149,10 @@ export default function SeusExamesDeRastreioColorretalMasculino() {
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <StatusBar hidden={true} />
-
+            <View style={{ height: 40 }} />
+            <TouchableOpacity style={styles.backButtonTop} onPress={() => router.back()}>
+                <FontAwesome5 name="arrow-left" size={18} color="#fff" />
+            </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.title}>Seus Exames de Rastreio - Colorretal</Text>
             </View>
@@ -390,5 +396,19 @@ const styles = StyleSheet.create({
         flex: 1, // Garante que o texto ocupe o espaço disponível
         marginRight: 10, // Espaçamento entre texto e imagem
     },
-
+    backButtonTop: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        backgroundColor: '#ff5721',
+        paddingVertical: 6,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        zIndex: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+        elevation: 5,
+    },
 });
