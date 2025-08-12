@@ -1,9 +1,12 @@
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Linking, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { db } from '../../config/firebase-config';
 
 const MarcarConsulta: React.FC = () => {
+  const router = useRouter();
   const [locais, setLocais] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -65,7 +68,16 @@ const MarcarConsulta: React.FC = () => {
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <Text style={styles.title}>Locais para Marcar Consulta</Text>
+
+      {/* Botão de voltar no topo esquerdo */}
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
+        onPress={() => router.back()}
+      >
+        <FontAwesome5 name="arrow-left" size={28} color="#fff" />
+      </TouchableOpacity>
+
+      <Text style={[styles.title, { marginTop: 70 }]}>Locais para Marcar Consulta</Text>
       <FlatList
         data={locais}
         keyExtractor={(item, index) => index.toString()}
