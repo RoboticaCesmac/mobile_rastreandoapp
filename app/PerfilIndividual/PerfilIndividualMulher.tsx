@@ -19,103 +19,6 @@ export default function PerfilIndividualMulher() {
     const fillAnim3 = useRef(new Animated.Value(0)).current;
     const fillAnim4 = useRef(new Animated.Value(0)).current;
 
-    const [actionCompleted1, setActionCompleted1] = useState(false);
-    const [actionCompleted2, setActionCompleted2] = useState(false);
-    const [actionCompleted3, setActionCompleted3] = useState(false);
-    const [actionCompleted4, setActionCompleted4] = useState(false);
-
-    const handlePressIn1 = () => {
-        Animated.timing(fillAnim1, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted1(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colo de Útero');
-            }
-        });
-    };
-
-    const handlePressOut1 = () => {
-        if (!actionCompleted1) {
-            Animated.timing(fillAnim1, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
-    const handlePressIn2 = () => {
-        Animated.timing(fillAnim2, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted2(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Mama');
-            }
-        });
-    };
-
-    const handlePressOut2 = () => {
-        if (!actionCompleted2) {
-            Animated.timing(fillAnim2, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
-    const handlePressIn3 = () => {
-        Animated.timing(fillAnim3, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted3(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colorretal');
-            }
-        });
-    };
-
-    const handlePressOut3 = () => {
-        if (!actionCompleted3) {
-            Animated.timing(fillAnim3, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
-    const handlePressIn4 = () => {
-        Animated.timing(fillAnim4, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted4(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Pulmão');
-            }
-        });
-    };
-
-    const handlePressOut4 = () => {
-        if (!actionCompleted4) {
-            Animated.timing(fillAnim4, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
@@ -170,13 +73,12 @@ export default function PerfilIndividualMulher() {
             </TouchableOpacity>
 
             <Text style={styles.title}>MULHER</Text>
-            <Text style={styles.subtitulo}>Segure para escolher</Text>
+            <Text style={styles.subtitulo}>Escolha uma neoplasia</Text>
 
             <View style={styles.grid}>
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation1 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn1}
-                        onPressOut={handlePressOut1}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colo de Útero')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >
@@ -187,8 +89,7 @@ export default function PerfilIndividualMulher() {
 
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation2 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn2}
-                        onPressOut={handlePressOut2}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Mama')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >
@@ -199,8 +100,7 @@ export default function PerfilIndividualMulher() {
 
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation3 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn3}
-                        onPressOut={handlePressOut3}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colorretal')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >
@@ -211,8 +111,7 @@ export default function PerfilIndividualMulher() {
 
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation4 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn4}
-                        onPressOut={handlePressOut4}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Pulmão')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >

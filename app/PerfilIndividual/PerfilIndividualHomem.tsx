@@ -18,79 +18,6 @@ export default function PerfilIndividualHomem() {
     const fillAnim2 = useRef(new Animated.Value(0)).current;
     const fillAnim3 = useRef(new Animated.Value(0)).current;
 
-    const [actionCompleted1, setActionCompleted1] = useState(false);
-    const [actionCompleted2, setActionCompleted2] = useState(false);
-    const [actionCompleted3, setActionCompleted3] = useState(false);
-
-    const handlePressIn1 = () => {
-        Animated.timing(fillAnim1, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted1(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Próstata');
-            }
-        });
-    };
-
-    const handlePressOut1 = () => {
-        if (!actionCompleted1) {
-            Animated.timing(fillAnim1, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
-    const handlePressIn2 = () => {
-        Animated.timing(fillAnim2, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted2(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colorretal');
-            }
-        });
-    };
-
-    const handlePressOut2 = () => {
-        if (!actionCompleted2) {
-            Animated.timing(fillAnim2, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
-    const handlePressIn3 = () => {
-        Animated.timing(fillAnim3, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start(({ finished }) => {
-            if (finished) {
-                setActionCompleted3(true);
-                router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Pulmão');
-            }
-        });
-    };
-
-    const handlePressOut3 = () => {
-        if (!actionCompleted3) {
-            Animated.timing(fillAnim3, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
-    };
-
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
@@ -140,13 +67,12 @@ export default function PerfilIndividualHomem() {
             </TouchableOpacity>
 
             <Text style={styles.title}>HOMEM</Text>
-            <Text style={styles.subtitulo}>Segure para escolher</Text>
+            <Text style={styles.subtitulo}>Escolha uma neoplasia</Text>
 
             <View style={styles.grid}>
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation1 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn1}
-                        onPressOut={handlePressOut1}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Próstata')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >
@@ -157,8 +83,7 @@ export default function PerfilIndividualHomem() {
 
                 <Animated.View style={[styles.squareButton, { backgroundColor: backgroundColorInterpolation2 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn2}
-                        onPressOut={handlePressOut2}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Colorretal')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >
@@ -171,8 +96,7 @@ export default function PerfilIndividualHomem() {
             <View style={styles.grid2}>
                 <Animated.View style={[styles.squareButton2, { backgroundColor: backgroundColorInterpolation3 }]}>
                     <TouchableOpacity
-                        onPressIn={handlePressIn3}
-                        onPressOut={handlePressOut3}
+                        onPress={() => router.push('/PerfilIndividual/PerfilInformacoesNeoplasia?neoplasia=Pulmão')}
                         activeOpacity={1}
                         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                     >
