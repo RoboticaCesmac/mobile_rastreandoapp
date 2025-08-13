@@ -73,9 +73,9 @@ export default function TelaLogin() {
       <View style={styles.lottieContainer}>
         <LottieView
           ref={lottieRef}
-          source={require('../../assets/lottie/LOGIN.json')}
+          source={require('../../assets/lottie/logo.json')}
           autoPlay
-          loop={false}
+          loop={true}
           speed={0.5}
           onAnimationFinish={() => { }}
           style={styles.lottie}
