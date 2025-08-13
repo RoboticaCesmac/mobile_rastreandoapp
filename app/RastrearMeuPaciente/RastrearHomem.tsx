@@ -38,12 +38,12 @@ export default function PerfilIndividualHomem() {
             <StatusBar hidden={true} />
 
             {/* Botão de voltar no topo esquerdo */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
                 onPress={() => router.back()}
             >
                 <FontAwesome5 name="arrow-left" size={28} color="#fff" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity style={styles.changeButton} onPress={() => router.push('/RastrearMeuPaciente/RastrearMeuPaciente')}>
                 <FontAwesome5 name="arrow-left" size={15} color="white" style={styles.iconMudar} />

@@ -106,6 +106,9 @@ export default function TelaDeHomeUsuario() {
       <TouchableOpacity style={styles.button} onPress={() => router.push('/MarcarConsulta/MarcarConsulta')}>
         <Text style={styles.buttonText}>Marque uma consulta</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.buttonLinks} onPress={() => router.push('/LinksReferencias/LinksReferencias')}>
+        <Text style={styles.buttonText}>Links de Referência</Text>
+      </TouchableOpacity>
       {/* Botão de voltar no topo esquerdo */}
       <TouchableOpacity
         style={{ position: 'absolute', top: 30, left: 20, zIndex: 10 }}
@@ -153,6 +156,20 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginVertical: 10,
     width: '80%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+      buttonLinks: {
+    backgroundColor: '#ff5721',
+    paddingVertical: 7,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginVertical: 5,
+    width: '60%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

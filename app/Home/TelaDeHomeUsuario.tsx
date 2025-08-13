@@ -107,6 +107,9 @@ export default function TelaDeHomeUsuario() {
       <TouchableOpacity style={styles.button} onPress={handleMarcarConsultaPress}>
         <Text style={styles.buttonText}>Marque uma consulta</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.buttonLinks} onPress={() => router.push('/LinksReferencias/LinksReferencias')}>
+        <Text style={styles.buttonText}>Links de Referência</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="exit-outline" size={24} color="#FFFFFF" />
         <Text style={styles.logoutButtonText}>Sair</Text>
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
-    marginBottom: 30,
+    marginBottom: 15,
   },
   button: {
     backgroundColor: '#3949AB',
@@ -134,6 +137,20 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginVertical: 10,
     width: '80%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+    buttonLinks: {
+    backgroundColor: '#ff5721',
+    paddingVertical: 7,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginVertical: 5,
+    width: '60%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -167,8 +184,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Bold',
   },
   lottie: {
-    width: 400,
-    height: 400,
+    width: 300,
+    height: 300,
     marginBottom: -80,
     marginTop: -100,
   },
@@ -176,7 +193,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 38,
     fontFamily: 'Quicksand-Bold',
-    marginVertical: 20,
+    marginVertical: 10,
     textAlign: 'center',
   },
 });
